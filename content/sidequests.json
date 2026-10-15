@@ -1,0 +1,102 @@
+[
+  {
+    "slug": "player-one",
+    "title": "Player One",
+    "icon": "gamepad",
+    "rarity": "legendary",
+    "status": "ongoing",
+    "chapter": "origins",
+    "blurb": "Video games are where it started. Wanting to know how they worked is what got me writing HTML and C++ at 10.",
+    "tags": [
+      "Curiosity",
+      "Problem solving"
+    ]
+  },
+  {
+    "slug": "circuits",
+    "title": "Solder & Circuits",
+    "icon": "chip",
+    "rarity": "rare",
+    "status": "ongoing",
+    "chapter": "unipac",
+    "blurb": "Electronics tinkering: building and fixing circuits, which pulled me toward mechatronics and automation at UNIPAC.",
+    "tags": [
+      "Electronics",
+      "Hardware"
+    ]
+  },
+  {
+    "slug": "six-strings",
+    "title": "Six Strings",
+    "icon": "guitar",
+    "rarity": "epic",
+    "status": "ongoing",
+    "blurb": "I play guitar, mostly rock and roll. Learning songs by ear trained the same patience I use when debugging.",
+    "tags": [
+      "Guitar",
+      "Rock and roll"
+    ]
+  },
+  {
+    "slug": "keeping-time",
+    "title": "Keeping Time",
+    "icon": "drums",
+    "rarity": "epic",
+    "status": "ongoing",
+    "blurb": "I also play drums. Holding a steady beat for a band is a lot like keeping a release cadence for a team.",
+    "tags": [
+      "Drums",
+      "Rhythm"
+    ]
+  },
+  {
+    "slug": "origins-of-everything",
+    "title": "Origins of Everything",
+    "icon": "galaxy",
+    "rarity": "legendary",
+    "status": "ongoing",
+    "blurb": "Astrophysics, space and how the universe began. I read about cosmology for fun and look up whenever the sky is clear.",
+    "tags": [
+      "Astrophysics",
+      "Cosmology",
+      "Astronomy"
+    ]
+  },
+  {
+    "slug": "quantum-fields",
+    "title": "Quantum Fields",
+    "icon": "atom",
+    "rarity": "legendary",
+    "status": "in-progress",
+    "blurb": "Self-studying quantum field theory, starting with quantum chromodynamics: quarks, gluons and the strong force.",
+    "tags": [
+      "QFT",
+      "QCD",
+      "Physics"
+    ]
+  },
+  {
+    "slug": "sci-fi-shelf",
+    "title": "The Sci-Fi Shelf",
+    "icon": "rocket",
+    "rarity": "rare",
+    "status": "ongoing",
+    "blurb": "Science fiction books, films and series. Good sci-fi is half of why I think about what software could become.",
+    "tags": [
+      "Sci-fi",
+      "Nerd culture"
+    ]
+  },
+  {
+    "slug": "friendly-neighborhood",
+    "title": "Friendly Neighborhood",
+    "icon": "spider",
+    "rarity": "legendary",
+    "status": "ongoing",
+    "blurb": "Spider-Man is my favorite superhero: with great power comes great responsibility, which is a decent motto for anyone with production access.",
+    "tags": [
+      "Spider-Man",
+      "Comics"
+    ]
+  }
+]

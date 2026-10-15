@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import siteJson from '../../content/site.json'
-import { compareTimeline, projectSchema, siteSchema, timelineSchema, type Project, type TimelineEntry } from '../content/schema'
+import { compareTimeline, projectSchema, sidequestIcons, sidequestSchema, siteSchema, timelineSchema, type Project, type TimelineEntry } from '../content/schema'
 import { Field, Notice, TextArea, TextInput, zodMessage } from './fields'
 import { GithubClient } from './github'
 import { emptyProject, ProjectEditor } from './ProjectEditor'
@@ -12,7 +12,7 @@ const TOKEN_KEY = 'cms-github-token'
 // Read the raw JSON so content edits don't hot-reload this module and reset the editor
 const bundledSite = { cms: siteJson.cms }
 
-type Tab = 'projects' | 'timeline' | 'site'
+type Tab = 'projects' | 'timeline' | 'quests' | 'site'
 type Editing<T> = { item: Partial<T>; originalSlug?: string; key: number } | null
 let editorKey = 0
 
@@ -115,16 +115,16 @@ async function loadAll<T>(store: ContentStore, dir: string, parse: (v: unknown) 
   return { items, errors }
 }
 
-function SiteSettings({ store }: { store: ContentStore }) {
+function JsonFileEditor({ store, path, parse, hint, label }: { store: ContentStore; path: string; parse: (v: unknown) => unknown; hint: string; label: string }) {
   const [text, setText] = useState('')
   const [msg, setMsg] = useState<{ kind: 'ok' | 'error'; text: string } | null>(null)
   useEffect(() => {
-    store.read('content/site.json').then((t) => setText(t ?? ''))
-  }, [store])
+    store.read(path).then((t) => setText(t ?? ''))
+  }, [store, path])
   async function save() {
     try {
-      const parsed = siteSchema.parse(JSON.parse(text))
-      await store.writeText('content/site.json', JSON.stringify(parsed, null, 2) + '\n', 'cms: update site settings')
+      const parsed = parse(JSON.parse(text))
+      await store.writeText(path, JSON.stringify(parsed, null, 2) + '\n', `cms: update ${label.toLowerCase()}`)
       setMsg({ kind: 'ok', text: 'Saved.' })
     } catch (err) {
       setMsg({ kind: 'error', text: zodMessage(err) })
@@ -132,11 +132,11 @@ function SiteSettings({ store }: { store: ContentStore }) {
   }
   return (
     <div className="space-y-4">
-      <p className="text-sm text-zinc-500">Name, tagline, about text, highlights, contact details and social links.</p>
-      <TextArea id="site-json" rows={28} value={text} onChange={setText} mono />
+      <p className="text-sm text-muted">{hint}</p>
+      <TextArea id={`json-${label}`} rows={28} value={text} onChange={setText} mono />
       {msg && <Notice kind={msg.kind}>{msg.text}</Notice>}
       <button type="button" className="btn-primary" onClick={save}>
-        Save settings
+        Save {label.toLowerCase()}
       </button>
     </div>
   )
@@ -199,6 +199,7 @@ function Workspace({ store, github, onDisconnect }: { store: ContentStore; githu
       <div role="tablist" className="mt-6 flex gap-1">
         {tabBtn('projects', `Projects (${projects.length})`)}
         {tabBtn('timeline', `Timeline (${timeline.length})`)}
+        {tabBtn('quests', 'Side quests')}
         {tabBtn('site', 'Site settings')}
       </div>
 
@@ -304,7 +305,18 @@ function Workspace({ store, github, onDisconnect }: { store: ContentStore; githu
             </div>
           ))}
 
-        {!loading && tab === 'site' && <SiteSettings store={store} />}
+        {!loading && tab === 'site' && (
+          <JsonFileEditor store={store} path="content/site.json" parse={(v) => siteSchema.parse(v)} label="Site settings" hint="Name, tagline, about text, highlights, contact details and social links." />
+        )}
+        {!loading && tab === 'quests' && (
+          <JsonFileEditor
+            store={store}
+            path="content/sidequests.json"
+            parse={(v) => sidequestSchema.array().parse(v)}
+            label="Side quests"
+            hint={`Hobbies shown as side quests. Fields: slug, title, icon (${sidequestIcons.join(', ')}), rarity (common, rare, epic, legendary), status (ongoing, in-progress, completed), chapter (a timeline id, optional), blurb, tags.`}
+          />
+        )}
       </div>
     </div>
   )

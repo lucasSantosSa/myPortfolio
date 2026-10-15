@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { Link, useNavigate } from 'react-router'
-import { projectBySlug } from '../content/load'
+import { projectBySlug, sidequestsFor } from '../content/load'
 import { compareChronological, type TimelineEntry } from '../content/schema'
 import { formatDuration, formatPeriod } from '../lib/format'
 import { prefersReducedMotion, useInView } from './motion'
 import { ChapterArt, LogoPlates, PageWash, presetHeading, presetLabel, themeStyle, usePageTheme } from './chapterThemes'
 import { Tags } from './ProjectBits'
+import { ChapterQuests } from './Sidequests'
 
 const kindLabel: Record<TimelineEntry['kind'], string> = {
   work: 'Work',
@@ -65,6 +66,7 @@ export function EntryDetail({ entry }: { entry: TimelineEntry }) {
           {entry.growth}
         </p>
       )}
+      <ChapterQuests quests={sidequestsFor(entry.slug)} />
       <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
         {entry.stack.length > 0 && <Tags items={entry.stack} />}
         {related.length > 0 && (

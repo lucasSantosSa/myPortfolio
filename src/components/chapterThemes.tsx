@@ -189,7 +189,7 @@ export function ChapterArt({ theme }: { theme?: ChapterTheme }) {
       return (
         <>
           {layer({ backgroundImage: `linear-gradient(transparent 31px, ${p}22 32px)`, backgroundSize: '100% 32px' })}
-          {layer({ left: 40, width: 4, right: 'auto', borderLeft: `1px solid ${p}55`, borderRight: `1px solid ${p}55` })}
+          {layer({ left: 18, width: 4, right: 'auto', borderLeft: `1px solid ${p}55`, borderRight: `1px solid ${p}55` })}
           {layer(
             {},
             <svg className="absolute -top-10 -right-10 h-64 w-64 opacity-[0.12]" viewBox="0 0 200 200" fill="none" stroke={p}>

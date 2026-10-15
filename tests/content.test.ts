@@ -1,7 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { projectSchema, siteSchema, timelineSchema } from '../src/content/schema'
+import { projectSchema, sidequestSchema, siteSchema, timelineSchema } from '../src/content/schema'
 
 const root = path.resolve(__dirname, '..')
 const readDir = (dir: string) =>
@@ -24,6 +24,12 @@ describe('content files', () => {
     const t = timelineSchema.parse(data)
     expect(file).toBe(`${t.slug}.json`)
     if (t.end && t.start) expect(t.end >= t.start).toBe(true)
+  })
+
+  it('side quests are valid and point at real chapters', () => {
+    const quests = sidequestSchema.array().parse(JSON.parse(fs.readFileSync(path.join(root, 'content/sidequests.json'), 'utf8')))
+    const timelineSlugs = new Set(timeline.map((t) => t.data.slug))
+    for (const q of quests) if (q.chapter) expect(timelineSlugs).toContain(q.chapter)
   })
 
   it('cross references point at existing entries', () => {

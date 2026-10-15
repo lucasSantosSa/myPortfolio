@@ -4,9 +4,10 @@ import { DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, WhatsappIcon } from '
 import { CountUp, Marquee, Reveal, RotatingWords } from '../components/motion'
 import { ContributionCalendar } from '../components/Activity'
 import { ProjectCard } from '../components/ProjectBits'
+import { QuestLog } from '../components/Sidequests'
 import { githubCalendar } from '../content/activity'
 import { HorizontalTimeline } from '../components/Timeline'
-import { projects, site, timeline } from '../content/load'
+import { projects, sidequests, site, timeline } from '../content/load'
 import { whatsappLink } from '../lib/format'
 import { usePageTitle } from '../lib/usePageTitle'
 
@@ -196,6 +197,16 @@ export function Home() {
         </div>
       </section>
 
+      {/* Side quests */}
+      <section className="container-page pb-24" aria-labelledby="quests-heading">
+        <SectionHeading index="04" eyebrow="Side quests" title="Off the main storyline" id="quests-heading">
+          Guitar, drums, electronics, the origins of the universe and a lifelong Spider-Man habit. The things that keep me curious when I'm not shipping.
+        </SectionHeading>
+        <div className="mt-10">
+          <QuestLog quests={sidequests} />
+        </div>
+      </section>
+
       {/* About */}
       <section className="relative overflow-hidden border-y border-line bg-bg-soft py-24" aria-labelledby="about-heading">
         <div className="absolute -right-32 -bottom-32 h-96 w-96 animate-aurora rounded-full bg-accent-400/10 blur-3xl" aria-hidden />
@@ -207,7 +218,7 @@ export function Home() {
             </div>
           </Reveal>
           <div>
-            <SectionHeading index="04" eyebrow="About" title="A bit about me" id="about-heading" />
+            <SectionHeading index="05" eyebrow="About" title="A bit about me" id="about-heading" />
             {site.about.split('\n\n').map((para, i) => (
               <Reveal key={para.slice(0, 20)} delay={i * 100}>
                 <p className="mt-5 text-lg leading-relaxed text-muted">{para}</p>
@@ -221,7 +232,7 @@ export function Home() {
       <section id="contact" className="relative scroll-mt-24 py-24" aria-labelledby="contact-heading">
         <div className="container-page grid gap-14 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <SectionHeading index="05" eyebrow="Contact" title={<>Let's <span className="gradient-text">talk</span>.</>} id="contact-heading">
+            <SectionHeading index="06" eyebrow="Contact" title={<>Let's <span className="gradient-text">talk</span>.</>} id="contact-heading">
               Hiring, a project, or just a question? Your message reaches my email and my WhatsApp at the same time.
             </SectionHeading>
             <Reveal delay={120}>

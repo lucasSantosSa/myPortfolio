@@ -127,3 +127,19 @@ export const siteSchema = z.object({
   cms: z.object({ repo: z.string().regex(/^[\w.-]+\/[\w.-]+$/), branch: z.string() }),
 })
 export type Site = z.infer<typeof siteSchema>
+
+export const sidequestIcons = ['gamepad', 'chip', 'guitar', 'drums', 'galaxy', 'atom', 'rocket', 'spider', 'star'] as const
+
+/** Hobbies and interests shown as "side quests" next to the career timeline */
+export const sidequestSchema = z.object({
+  slug,
+  title: z.string().min(1),
+  icon: z.enum(sidequestIcons),
+  rarity: z.enum(['common', 'rare', 'epic', 'legendary']).default('rare'),
+  status: z.enum(['ongoing', 'in-progress', 'completed']).default('ongoing'),
+  /** Timeline chapter this quest started in or belongs to */
+  chapter: slug.optional(),
+  blurb: z.string().min(1),
+  tags: z.array(z.string()).default([]),
+})
+export type Sidequest = z.infer<typeof sidequestSchema>

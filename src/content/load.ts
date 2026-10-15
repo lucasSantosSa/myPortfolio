@@ -1,5 +1,6 @@
+import sidequestsJson from '../../content/sidequests.json'
 import siteJson from '../../content/site.json'
-import { compareTimeline, projectSchema, siteSchema, timelineSchema, type Project, type TimelineEntry } from './schema'
+import { compareTimeline, projectSchema, sidequestSchema, siteSchema, timelineSchema, type Project, type TimelineEntry } from './schema'
 
 const projectFiles = import.meta.glob('../../content/projects/*.json', { eager: true, import: 'default' })
 const timelineFiles = import.meta.glob('../../content/timeline/*.json', { eager: true, import: 'default' })
@@ -27,3 +28,6 @@ export const timeline: TimelineEntry[] = parseAll(timelineFiles, (v) => timeline
 
 export const projectBySlug = (slug: string) => projects.find((p) => p.slug === slug)
 export const timelineBySlug = (slug: string) => timeline.find((t) => t.slug === slug)
+
+export const sidequests = sidequestSchema.array().parse(sidequestsJson)
+export const sidequestsFor = (chapter: string) => sidequests.filter((q) => q.chapter === chapter)

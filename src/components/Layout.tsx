@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, Outlet, useLocation } from 'react-router'
 import { site } from '../content/load'
 import { whatsappLink } from '../lib/format'
+import { SpiderSense } from './SpiderSense'
 import { GithubIcon, LinkedinIcon, MailIcon, MoonIcon, SunIcon, WhatsappIcon } from './Icons'
 
 function ThemeToggle() {
@@ -81,6 +82,7 @@ export function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
       <ScrollProgress />
+      <SpiderSense />
       <a href="#main" className="btn-primary sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[60]">
         Skip to content
       </a>
