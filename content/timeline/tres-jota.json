@@ -20,8 +20,14 @@
   "relatedProjects": [],
   "theme": {
     "preset": "print",
-    "primary": "#e6007e",
-    "secondary": "#00a0e3",
-    "logos": []
+    "primary": "#3c746b",
+    "secondary": "#e6007e",
+    "logos": [
+      {
+        "src": "/media/logos/tres-jota.png",
+        "alt": "Três Jota Soluções Visuais",
+        "plate": "light"
+      }
+    ]
   }
 }

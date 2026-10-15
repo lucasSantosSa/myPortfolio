@@ -27,6 +27,12 @@
     "preset": "blueprint",
     "primary": "#38bdf8",
     "secondary": "#fb923c",
-    "logos": []
+    "logos": [
+      {
+        "src": "/media/logos/maxima-serv.png",
+        "alt": "Maxima Serv",
+        "plate": "dark"
+      }
+    ]
   }
 }
