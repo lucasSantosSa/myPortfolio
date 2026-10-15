@@ -8,12 +8,12 @@ function MediaView({ item, large }: { item: Media; large?: boolean }) {
   }
   if (item.type === 'embed') {
     return (
-      <div className="aspect-video w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-900">
+      <div className="aspect-video w-full overflow-hidden rounded-xl bg-chip">
         <iframe src={toEmbedUrl(item.src)} title={item.alt || item.caption || 'Embedded recording'} className="h-full w-full" allow="fullscreen; picture-in-picture" loading="lazy" />
       </div>
     )
   }
-  return <img src={item.src} alt={item.alt} loading="lazy" className={`w-full rounded-xl border border-zinc-200 dark:border-zinc-800 ${large ? 'max-h-[80vh] object-contain' : 'h-auto'}`} />
+  return <img src={item.src} alt={item.alt} loading="lazy" className={`w-full rounded-xl border border-line ${large ? 'max-h-[80vh] object-contain' : 'h-auto'}`} />
 }
 
 export function MediaGallery({ media }: { media: Media[] }) {
@@ -47,7 +47,7 @@ export function MediaGallery({ media }: { media: Media[] }) {
             ) : (
               <MediaView item={item} />
             )}
-            {item.caption && <figcaption className="mt-2 text-sm text-zinc-500">{item.caption}</figcaption>}
+            {item.caption && <figcaption className="mt-2 text-sm text-muted">{item.caption}</figcaption>}
           </figure>
         ))}
       </div>
@@ -60,14 +60,14 @@ export function MediaGallery({ media }: { media: Media[] }) {
           if (e.key === 'ArrowLeft') step(-1)
         }}
         onClick={(e) => e.target === dialog.current && setOpen(null)}
-        className="m-auto w-[min(1200px,95vw)] rounded-2xl bg-white p-4 backdrop:bg-black/80 dark:bg-zinc-900"
+        className="m-auto w-[min(1200px,95vw)] rounded-2xl bg-card p-4 text-fg backdrop:bg-black/80 backdrop:backdrop-blur-sm"
         aria-label="Screenshot viewer"
       >
         {current && (
           <div>
             <MediaView item={current} large />
             <div className="mt-3 flex items-center justify-between gap-2 text-sm">
-              <span className="text-zinc-600 dark:text-zinc-400">{current.caption ?? current.alt}</span>
+              <span className="text-muted">{current.caption ?? current.alt}</span>
               <div className="flex gap-2">
                 {images.length > 1 && (
                   <>

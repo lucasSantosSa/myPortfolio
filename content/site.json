@@ -1,25 +1,31 @@
 {
   "name": "Lucas Santos",
   "role": "Fullstack Engineer",
-  "tagline": "I build web apps people rely on every day: booking flows, business systems and AI tools, with React, TypeScript, Node and PostgreSQL.",
+  "tagline": "Fullstack engineer with 6+ years shipping production software for travel, legal, agriculture and media companies. I work mostly in React, TypeScript, Node and PostgreSQL, and I care about fast, accessible interfaces.",
+  "headlineWords": [
+    "booking platforms",
+    "business systems",
+    "AI tools",
+    "developer tools"
+  ],
   "location": "Belo Horizonte, Brazil · working remotely",
   "about": "I've been shipping production web software for over six years, mostly as a remote engineer for North American companies: travel booking platforms, an agricultural cooperative's business system, a legal AI chat tool and marketing sites.\n\nBefore code I was a graphic designer and an English teacher. Design gave me an eye for detail in UI, and teaching made me good at explaining technical things to non-technical people. I'm a native speaker of both English and Portuguese, and I studied Computer Science at UFOP.\n\nOutside client work I build tools for my own Linux setup and home lab, and you'll find a few of them in my projects.",
   "highlights": [
     {
-      "value": "6+ years",
-      "label": "shipping production web apps"
+      "value": "6+",
+      "label": "years shipping production web apps"
     },
     {
-      "value": "6 companies",
-      "label": "across travel, legal, agriculture and media"
+      "value": "6",
+      "label": "companies across travel, legal, agriculture and media"
     },
     {
       "value": "Senior",
       "label": "frontend engineer on a multi-tenant travel platform"
     },
     {
-      "value": "EN · PT",
-      "label": "native in both"
+      "value": "EN·PT",
+      "label": "native in both English and Portuguese"
     }
   ],
   "contact": {

@@ -1,17 +1,23 @@
 import { Link } from 'react-router'
 import type { Project } from '../content/schema'
 import { ExternalIcon, GithubIcon } from './Icons'
+import { useSpotlight } from './motion'
 
-const statusStyles: Record<Project['status'], { label: string; cls: string }> = {
-  live: { label: 'Live', cls: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300' },
-  'in-progress': { label: 'In progress', cls: 'bg-sky-100 text-sky-800 dark:bg-sky-900/40 dark:text-sky-300' },
-  'coming-soon': { label: 'Coming soon', cls: 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300' },
-  archived: { label: 'Archive', cls: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300' },
+const statusStyles: Record<Project['status'], { label: string; dot: string }> = {
+  live: { label: 'Live', dot: 'bg-emerald-400' },
+  'in-progress': { label: 'In progress', dot: 'bg-sky-400' },
+  'coming-soon': { label: 'Coming soon', dot: 'bg-amber-400' },
+  archived: { label: 'Archive', dot: 'bg-zinc-400' },
 }
 
 export function StatusBadge({ status }: { status: Project['status'] }) {
   const s = statusStyles[status]
-  return <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${s.cls}`}>{s.label}</span>
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-bg/70 px-2.5 py-0.5 text-xs font-medium text-muted backdrop-blur">
+      <span className={`h-1.5 w-1.5 rounded-full ${s.dot} ${status === 'live' || status === 'in-progress' ? 'animate-pulse' : ''}`} aria-hidden />
+      {s.label}
+    </span>
+  )
 }
 
 export function Tags({ items, limit }: { items: string[]; limit?: number }) {
@@ -20,11 +26,11 @@ export function Tags({ items, limit }: { items: string[]; limit?: number }) {
   return (
     <ul className="flex flex-wrap gap-1.5" aria-label="Technologies">
       {shown.map((t) => (
-        <li key={t} className="rounded-md bg-zinc-100 px-2 py-0.5 font-mono text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
+        <li key={t} className="chip">
           {t}
         </li>
       ))}
-      {rest > 0 && <li className="px-1 text-xs text-zinc-500">+{rest}</li>}
+      {rest > 0 && <li className="px-1 py-0.5 font-mono text-[11px] text-muted">+{rest}</li>}
     </ul>
   )
 }
@@ -37,45 +43,70 @@ export const categoryLabels: Record<Project['category'], string> = {
   showcase: 'Showcase rebuilds',
 }
 
-function Cover({ project }: { project: Project }) {
+/** Deterministic hue pair per project so placeholder covers differ. */
+function hues(slug: string) {
+  let h = 0
+  for (const c of slug) h = (h * 31 + c.charCodeAt(0)) % 360
+  return [h, (h + 70) % 360]
+}
+
+function Cover({ project, large }: { project: Project; large?: boolean }) {
   const image = project.media.find((m) => m.type === 'image')
+  const height = large ? 'h-56 sm:h-72' : 'h-44'
   if (image) {
-    return <img src={image.src} alt={image.alt || `${project.title} screenshot`} loading="lazy" className="aspect-video w-full rounded-t-2xl object-cover object-top" />
+    return (
+      <div className={`overflow-hidden ${height}`}>
+        <img src={image.src} alt={image.alt || `${project.title} screenshot`} loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+      </div>
+    )
   }
-  // Text cover for projects without screenshots yet
+  const [a, b] = hues(project.slug)
   return (
-    <div className="relative flex h-32 w-full items-end overflow-hidden rounded-t-2xl bg-gradient-to-br from-accent-700 to-zinc-900 p-5 dark:from-accent-900 dark:to-zinc-950" aria-hidden>
-      <span className="absolute -top-2 right-3 font-mono text-[5.5rem] leading-none font-bold text-white/10 select-none">{project.title.slice(0, 2)}</span>
-      <span className="relative font-mono text-sm text-accent-100/90">{project.stack.slice(0, 3).join(' · ')}</span>
+    <div className={`relative overflow-hidden ${height}`} aria-hidden>
+      <div
+        className="absolute inset-0 transition-transform duration-700 group-hover:scale-110"
+        style={{ background: `radial-gradient(circle at 20% 20%, hsl(${a} 80% 55% / 0.55), transparent 55%), radial-gradient(circle at 80% 70%, hsl(${b} 80% 55% / 0.45), transparent 55%), var(--bg-soft)` }}
+      />
+      <div className="grid-bg absolute inset-0 opacity-60" />
+      <span className="absolute right-5 bottom-3 font-display text-7xl font-bold tracking-tighter text-fg/10 transition-transform duration-700 group-hover:-translate-y-1 sm:text-8xl">
+        {project.title.split(/\s+/).map((w) => w[0]).join('').slice(0, 3)}
+      </span>
+      <span className="absolute bottom-4 left-5 font-mono text-xs text-fg/70">{project.stack.slice(0, 3).join(' · ')}</span>
     </div>
   )
 }
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({ project, large }: { project: Project; large?: boolean }) {
+  const ref = useSpotlight<HTMLElement>()
   return (
-    <article className="card group relative flex flex-col overflow-hidden transition-shadow hover:shadow-lg">
-      <Cover project={project} />
-      <div className="flex flex-1 flex-col gap-3 p-5">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
-            <Link to={`/projects/${project.slug}`} className="after:absolute after:inset-0">
-              {project.title}
-            </Link>
-          </h3>
+    <article ref={ref} className="spotlight card group relative flex h-full flex-col overflow-hidden transition-transform duration-500 hover:-translate-y-1">
+      <div className="relative">
+        <Cover project={project} large={large} />
+        <div className="absolute top-4 left-4">
           <StatusBadge status={project.status} />
         </div>
-        <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{project.summary}</p>
-        <div className="mt-auto flex items-end justify-between gap-3">
-          <Tags items={project.stack} limit={4} />
-          <div className="relative z-10 flex shrink-0 gap-1">
+      </div>
+      <div className="flex flex-1 flex-col gap-3 p-6">
+        <h3 className={`font-semibold tracking-tight ${large ? 'text-2xl' : 'text-xl'}`}>
+          <Link to={`/projects/${project.slug}`} viewTransition className="after:absolute after:inset-0 after:z-[2]">
+            {project.title}
+            <span className="ml-1 inline-block text-accent-400 opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" aria-hidden>
+              →
+            </span>
+          </Link>
+        </h3>
+        <p className="text-sm leading-relaxed text-muted">{project.summary}</p>
+        <div className="mt-auto flex items-end justify-between gap-3 pt-2">
+          <Tags items={project.stack} limit={large ? 6 : 4} />
+          <div className="relative z-[3] flex shrink-0 gap-1">
             {project.repo?.visibility === 'public' && (
-              <a href={project.repo.url} target="_blank" rel="noreferrer" className="rounded-lg p-1.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100" aria-label={`${project.title} source on GitHub`}>
-                <GithubIcon width={18} height={18} />
+              <a href={project.repo.url} target="_blank" rel="noreferrer" className="grid h-8 w-8 place-items-center rounded-full text-muted transition-colors hover:bg-chip hover:text-fg" aria-label={`${project.title} source on GitHub`}>
+                <GithubIcon width={16} height={16} />
               </a>
             )}
             {project.demoUrl && (
-              <a href={project.demoUrl} target="_blank" rel="noreferrer" className="rounded-lg p-1.5 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100" aria-label={`${project.title} live demo`}>
-                <ExternalIcon width={18} height={18} />
+              <a href={project.demoUrl} target="_blank" rel="noreferrer" className="grid h-8 w-8 place-items-center rounded-full text-muted transition-colors hover:bg-chip hover:text-fg" aria-label={`${project.title} live demo`}>
+                <ExternalIcon />
               </a>
             )}
           </div>

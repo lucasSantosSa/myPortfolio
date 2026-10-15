@@ -36,9 +36,10 @@ export function ContactForm() {
 
   if (state.kind === 'sent') {
     return (
-      <div role="status" className="card p-6">
-        <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">Thanks, your message is on its way.</p>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+      <div role="status" className="card p-8 text-center">
+        <div className="mx-auto mb-4 grid h-14 w-14 animate-[float_3s_ease-in-out_infinite] place-items-center rounded-full bg-gradient-to-br from-accent-400 to-violet-500 text-2xl text-white">✓</div>
+        <p className="text-lg font-semibold text-fg">Thanks, your message is on its way.</p>
+        <p className="mt-2 text-muted">
           It reached me by {state.channels.join(' and ')}. I usually reply within a day.
         </p>
         <button type="button" className="btn-ghost mt-4" onClick={() => setState({ kind: 'idle' })}>
@@ -51,7 +52,7 @@ export function ContactForm() {
   const fallbackText = state.kind === 'error' ? `Hi Lucas, I'm ${state.fallback.name}. ${state.fallback.message}` : ''
 
   return (
-    <form onSubmit={onSubmit} className="card space-y-4 p-6" noValidate={false}>
+    <form onSubmit={onSubmit} className="card space-y-5 p-6 sm:p-8" noValidate={false}>
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="c-name" className="label">
@@ -68,7 +69,7 @@ export function ContactForm() {
       </div>
       <div>
         <label htmlFor="c-phone" className="label">
-          Phone or WhatsApp <span className="font-normal text-zinc-500">(optional)</span>
+          Phone or WhatsApp <span className="font-normal text-muted">(optional)</span>
         </label>
         <input id="c-phone" name="phone" type="tel" maxLength={40} autoComplete="tel" className="input" />
       </div>
@@ -100,7 +101,7 @@ export function ContactForm() {
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-xs text-zinc-500">Your message goes to my email and my WhatsApp.</p>
+        <p className="text-xs text-muted">Your message goes to my email and my WhatsApp.</p>
         <button type="submit" className="btn-primary" disabled={state.kind === 'sending'}>
           {state.kind === 'sending' ? 'Sending…' : 'Send message'}
         </button>

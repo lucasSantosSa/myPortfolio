@@ -68,6 +68,8 @@ export const siteSchema = z.object({
   name: z.string(),
   role: z.string(),
   tagline: z.string(),
+  /** Words the hero headline cycles through: "I build ___" */
+  headlineWords: z.array(z.string()).min(1).default(['web apps']),
   location: z.string(),
   about: z.string(),
   highlights: z.array(z.object({ value: z.string(), label: z.string() })),
