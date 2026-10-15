@@ -10,76 +10,123 @@ export function hexToRgb(hex: string): string {
 }
 
 interface Surface {
+  /** page background */
+  bg: string
   card: string
   fg: string
   muted: string
   line: string
   chip: string
   bgSoft: string
+  /** whether the palette is dark, so the browser UI (scrollbars, form controls) matches */
+  dark: boolean
 }
 
-/** Per-preset card surface (undefined keeps the site's own light/dark surface) and heading style. */
-const presets: Record<Preset, { surface?: Surface; heading: string; label: string }> = {
+/** Per-preset page palette, heading style and heading font for the whole page. */
+const presets: Record<Preset, { surface: Surface; heading: string; font: string; label: string }> = {
   notebook: {
     label: 'Notebook',
     heading: 'font-[Caveat] text-4xl sm:text-5xl font-bold',
-    surface: { card: '#fbf8ef', fg: '#1f2937', muted: '#5b6472', line: '#d6dde8', chip: '#eef1f6', bgSoft: '#f3f0e6' },
+    font: "'Caveat', cursive",
+    surface: { bg: '#f1ede1', card: '#fbf8ef', fg: '#1f2937', muted: '#5b6472', line: '#d6dde8', chip: '#eef1f6', bgSoft: '#f6f2e7', dark: false },
   },
-  print: { label: 'Print shop', heading: 'font-display uppercase tracking-tight font-bold' },
+  print: {
+    label: 'Print shop',
+    heading: 'font-display uppercase tracking-tight font-bold',
+    font: "'Space Grotesk', sans-serif",
+    surface: { bg: '#f5f4ef', card: '#ffffff', fg: '#1d1d1b', muted: '#5d5d58', line: '#dcdbd3', chip: '#eeede6', bgSoft: '#efeee8', dark: false },
+  },
   chalkboard: {
     label: 'Classroom',
     heading: 'font-[Caveat] text-4xl sm:text-5xl font-bold',
-    surface: { card: '#1f3a2c', fg: '#f1f5ec', muted: '#b9c9b5', line: '#3c5a49', chip: '#2a4a39', bgSoft: '#25432f' },
+    font: "'Caveat', cursive",
+    surface: { bg: '#162e22', card: '#1f3a2c', fg: '#f1f5ec', muted: '#b9c9b5', line: '#3c5a49', chip: '#2a4a39', bgSoft: '#1b3628', dark: true },
   },
   academic: {
     label: 'University',
     heading: "font-['Fraunces'] font-bold",
-    surface: { card: '#fbf6ea', fg: '#2b2118', muted: '#6b5d4f', line: '#e3d6bf', chip: '#f1e7d4', bgSoft: '#f4ecdb' },
+    font: "'Fraunces', serif",
+    surface: { bg: '#efe5d0', card: '#fbf6ea', fg: '#2b2118', muted: '#6b5d4f', line: '#ddcfb5', chip: '#f1e7d4', bgSoft: '#f4ecdb', dark: false },
   },
   blueprint: {
     label: 'Blueprint',
     heading: 'font-mono uppercase tracking-wide font-semibold',
-    surface: { card: '#0b3a7a', fg: '#eaf4ff', muted: '#a8c4e6', line: '#2a5ea3', chip: '#124a92', bgSoft: '#0e4389' },
+    font: "'JetBrains Mono', monospace",
+    surface: { bg: '#072c5a', card: '#0b3a7a', fg: '#eaf4ff', muted: '#a8c4e6', line: '#2a5ea3', chip: '#124a92', bgSoft: '#0a356c', dark: true },
   },
   terminal: {
     label: 'Terminal',
     heading: 'font-mono font-semibold',
-    surface: { card: '#070d08', fg: '#d1fadf', muted: '#7fb894', line: '#1d3324', chip: '#102016', bgSoft: '#0b150d' },
+    font: "'JetBrains Mono', monospace",
+    surface: { bg: '#020503', card: '#070d08', fg: '#d1fadf', muted: '#7fb894', line: '#1d3324', chip: '#102016', bgSoft: '#060b07', dark: true },
   },
-  editorial: { label: 'Editorial', heading: 'font-display uppercase font-bold tracking-tight' },
-  outdoors: { label: 'Outdoors', heading: 'font-display font-bold' },
+  editorial: {
+    label: 'Editorial',
+    heading: 'font-display uppercase font-bold tracking-tight',
+    font: "'Fraunces', serif",
+    surface: { bg: '#f3efe6', card: '#fbf9f4', fg: '#141414', muted: '#55524c', line: '#d9d3c6', chip: '#ebe6db', bgSoft: '#f7f4ec', dark: false },
+  },
+  outdoors: {
+    label: 'Outdoors',
+    heading: 'font-display font-bold',
+    font: "'Space Grotesk', sans-serif",
+    surface: { bg: '#0f1c17', card: '#15261f', fg: '#eef4ef', muted: '#a9bbb1', line: '#284036', chip: '#1c3229', bgSoft: '#12221c', dark: true },
+  },
   legal: {
     label: 'Legal',
     heading: "font-['Fraunces'] font-semibold",
-    surface: { card: '#f6f8fb', fg: '#0d1b2a', muted: '#4f5d6e', line: '#d8e0ea', chip: '#e8eef5', bgSoft: '#eef2f7' },
+    font: "'Fraunces', serif",
+    surface: { bg: '#e8eef6', card: '#f6f8fb', fg: '#0d1b2a', muted: '#4f5d6e', line: '#d0dae6', chip: '#e2e9f2', bgSoft: '#eef2f7', dark: false },
   },
-  harvest: { label: 'Harvest', heading: 'font-display font-bold' },
-  travel: { label: 'Travel', heading: 'font-display font-bold' },
+  harvest: {
+    label: 'Harvest',
+    heading: 'font-display font-bold',
+    font: "'Space Grotesk', sans-serif",
+    surface: { bg: '#f8eedb', card: '#fffaf0', fg: '#2d1a0e', muted: '#6e5a48', line: '#ead9ba', chip: '#f4e7cc', bgSoft: '#fbf3e3', dark: false },
+  },
+  travel: {
+    label: 'Travel',
+    heading: 'font-display font-bold',
+    font: "'Space Grotesk', sans-serif",
+    surface: { bg: '#141318', card: '#1d1b22', fg: '#f4f1ee', muted: '#a9a3a0', line: '#2f2c35', chip: '#26232c', bgSoft: '#18171d', dark: true },
+  },
 }
 
 export const presetHeading = (theme?: ChapterTheme) => (theme ? presets[theme.preset].heading : '')
+
+const surfaceVars = (s: Surface) => ({ '--bg': s.bg, '--card': s.card, '--fg': s.fg, '--muted': s.muted, '--line': s.line, '--chip': s.chip, '--bg-soft': s.bgSoft })
 
 /** Scoped CSS variables for a themed card. */
 export function themeStyle(theme?: ChapterTheme): CSSProperties {
   if (!theme) return {}
   const s = presets[theme.preset].surface
-  return {
-    '--glow-a': hexToRgb(theme.primary),
-    '--glow-b': hexToRgb(theme.secondary),
-    ...(s ? { '--card': s.card, '--fg': s.fg, '--muted': s.muted, '--line': s.line, '--chip': s.chip, '--bg-soft': s.bgSoft, '--bg': s.card, color: s.fg } : {}),
-  } as CSSProperties
+  return { '--glow-a': hexToRgb(theme.primary), '--glow-b': hexToRgb(theme.secondary), ...surfaceVars(s), color: s.fg } as CSSProperties
 }
 
-/** Applies the chapter's colors to the whole page while mounted. */
+const THEMED_VARS = ['--glow-a', '--glow-b', '--bg', '--card', '--fg', '--muted', '--line', '--chip', '--bg-soft', '--chapter-font']
+
+/**
+ * Re-themes the whole page (background, text, cards, nav, accents, headings) while mounted.
+ * Unmounting, e.g. navigating to another page, restores the site's own light/dark theme.
+ */
 export function usePageTheme(theme?: ChapterTheme) {
   useEffect(() => {
     const root = document.documentElement
     if (!theme) return
-    root.style.setProperty('--glow-a', hexToRgb(theme.primary))
-    root.style.setProperty('--glow-b', hexToRgb(theme.secondary))
+    const p = presets[theme.preset]
+    const vars: Record<string, string> = {
+      '--glow-a': hexToRgb(theme.primary),
+      '--glow-b': hexToRgb(theme.secondary),
+      ...surfaceVars(p.surface),
+      '--chapter-font': p.font,
+    }
+    for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v)
+    root.dataset.chapterPreset = theme.preset
+    root.style.colorScheme = p.surface.dark ? 'dark' : 'light'
     return () => {
-      root.style.removeProperty('--glow-a')
-      root.style.removeProperty('--glow-b')
+      for (const k of THEMED_VARS) root.style.removeProperty(k)
+      delete root.dataset.chapterPreset
+      root.style.removeProperty('color-scheme')
     }
   }, [theme])
 }
@@ -328,6 +375,16 @@ export function ChapterArt({ theme }: { theme?: ChapterTheme }) {
         </>
       )
   }
+}
+
+/** The chapter's artwork across the whole viewport, behind the content. */
+export function PageArt({ theme, id }: { theme?: ChapterTheme; id?: string }) {
+  if (!theme) return null
+  return (
+    <div key={id} className="pointer-events-none fixed inset-0 -z-10 animate-[detail-in_0.9s_ease-out] overflow-hidden text-fg" aria-hidden>
+      <ChapterArt theme={theme} />
+    </div>
+  )
 }
 
 /** Soft full-page wash in the chapter's colors (fades in on change). */

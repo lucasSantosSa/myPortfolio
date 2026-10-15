@@ -4,7 +4,7 @@ import { projectBySlug, sidequestsFor } from '../content/load'
 import { compareChronological, type TimelineEntry } from '../content/schema'
 import { formatDuration, formatPeriod } from '../lib/format'
 import { prefersReducedMotion, useInView } from './motion'
-import { ChapterArt, LogoPlates, PageWash, presetHeading, presetLabel, themeStyle, usePageTheme } from './chapterThemes'
+import { LogoPlates, PageArt, PageWash, presetHeading, presetLabel, themeStyle, usePageTheme } from './chapterThemes'
 import { Tags } from './ProjectBits'
 import { ChapterQuests } from './Sidequests'
 
@@ -322,9 +322,7 @@ export function ExperienceExplorer({ entries, initial }: { entries: TimelineEntr
           className="card relative mt-10 overflow-hidden bg-card p-6 text-fg shadow-[0_30px_80px_-40px_rgb(var(--glow-a)/0.7)] transition-[background-color,color,box-shadow] duration-500 sm:p-10"
         >
           <PageWash theme={entry.theme} id={entry.slug} />
-          <div key={`art-${entry.slug}`} className="animate-[detail-in_0.7s_ease-out]">
-            <ChapterArt theme={entry.theme} />
-          </div>
+          <PageArt theme={entry.theme} id={`art-${entry.slug}`} />
           {entry.theme && (
             <span className="absolute top-4 right-4 z-[1] rounded-full border border-line bg-card/80 px-2.5 py-0.5 font-mono text-[10px] tracking-widest text-muted uppercase backdrop-blur sm:hidden">
               {presetLabel(entry.theme)}
