@@ -15,5 +15,9 @@
     "Claude API"
   ],
   "relatedTimeline": "dla-piper",
-  "media": []
+  "media": [],
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/ai-document-chat",
+    "visibility": "private"
+  }
 }

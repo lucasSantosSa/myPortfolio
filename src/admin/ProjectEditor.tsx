@@ -259,6 +259,9 @@ export function ProjectEditor({
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" checked={p.featured ?? false} onChange={(e) => set('featured', e.target.checked)} /> Featured on the home page
           </label>
+          <Field id="p-progress" label="Complete %">
+            <TextInput id="p-progress" type="number" min={0} max={100} value={p.progress === undefined ? '' : String(p.progress)} onChange={(v) => set('progress', v === '' ? undefined : Math.max(0, Math.min(100, Number(v))))} className="input w-24" placeholder="auto" />
+          </Field>
           <Field id="p-order" label="Sort order">
             <TextInput id="p-order" type="number" value={String(p.order ?? 100)} onChange={(v) => set('order', Number(v) || 0)} className="input w-24" />
           </Field>

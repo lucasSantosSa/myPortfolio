@@ -27,6 +27,12 @@ Everything on the site comes from JSON files, validated against `src/content/sch
 
 `npm test` checks every file against the schema, that links between projects and timeline entries resolve, and that local media files exist.
 
+## Activity squares
+
+`npm run sync:activity` pulls real commit data into `content/activity/`: the GitHub contribution calendar for the last year (public and private counts) and daily commit counts for each project's repo. Local-only projects map to a checkout in `activity.config.json`. It uses `GITHUB_TOKEN` or the GitHub CLI's login. Run it before a deploy to refresh the squares, then commit the JSON.
+
+A project's completeness ring comes from its `progress` (0–100) in the CMS, or from its status when it isn't set.
+
 ## CMS (`/admin`)
 
 - **Local mode** (while `npm run dev` runs): saves straight into this checkout. Commit the changes with git afterwards.

@@ -2,7 +2,9 @@ import { Link } from 'react-router'
 import { ContactForm } from '../components/ContactForm'
 import { DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, WhatsappIcon } from '../components/Icons'
 import { CountUp, Marquee, Reveal, RotatingWords } from '../components/motion'
+import { ContributionCalendar } from '../components/Activity'
 import { ProjectCard } from '../components/ProjectBits'
+import { githubCalendar } from '../content/activity'
 import { HorizontalTimeline } from '../components/Timeline'
 import { projects, site, timeline } from '../content/load'
 import { whatsappLink } from '../lib/format'
@@ -163,11 +165,23 @@ export function Home() {
         </div>
       </section>
 
+      {/* Activity */}
+      {githubCalendar && (
+        <section className="container-page py-16" aria-labelledby="activity-heading">
+          <SectionHeading index="02" eyebrow="Activity" title="Shipping, week after week" id="activity-heading">
+            Most of my work lives in private client repositories, so this counts everything I commit, public and private.
+          </SectionHeading>
+          <Reveal className="mt-10">
+            <ContributionCalendar calendar={githubCalendar} />
+          </Reveal>
+        </section>
+      )}
+
       {/* Journey */}
       <section className="py-24" aria-labelledby="exp-heading">
         <div className="container-page">
           <div className="flex flex-wrap items-end justify-between gap-6">
-            <SectionHeading index="02" eyebrow="Journey" title="From curious kid to senior engineer" id="exp-heading">
+            <SectionHeading index="03" eyebrow="Journey" title="From curious kid to senior engineer" id="exp-heading">
               Games made me curious, HTML and C++ at 10 made me sure. Design, teaching, IT support and university came before code became my job. Pick any chapter to read the details.
             </SectionHeading>
             <Reveal>
@@ -193,7 +207,7 @@ export function Home() {
             </div>
           </Reveal>
           <div>
-            <SectionHeading index="03" eyebrow="About" title="A bit about me" id="about-heading" />
+            <SectionHeading index="04" eyebrow="About" title="A bit about me" id="about-heading" />
             {site.about.split('\n\n').map((para, i) => (
               <Reveal key={para.slice(0, 20)} delay={i * 100}>
                 <p className="mt-5 text-lg leading-relaxed text-muted">{para}</p>
@@ -207,7 +221,7 @@ export function Home() {
       <section id="contact" className="relative scroll-mt-24 py-24" aria-labelledby="contact-heading">
         <div className="container-page grid gap-14 lg:grid-cols-[1fr_1.4fr]">
           <div>
-            <SectionHeading index="04" eyebrow="Contact" title={<>Let's <span className="gradient-text">talk</span>.</>} id="contact-heading">
+            <SectionHeading index="05" eyebrow="Contact" title={<>Let's <span className="gradient-text">talk</span>.</>} id="contact-heading">
               Hiring, a project, or just a question? Your message reaches my email and my WhatsApp at the same time.
             </SectionHeading>
             <Reveal delay={120}>

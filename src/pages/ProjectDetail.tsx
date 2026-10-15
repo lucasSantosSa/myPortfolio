@@ -2,7 +2,9 @@ import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Link, useParams } from 'react-router'
 import { ExternalIcon, GithubIcon } from '../components/Icons'
+import { CompletenessMeter, ProjectActivityPanel } from '../components/Activity'
 import { MediaGallery } from '../components/MediaGallery'
+import { activityFor } from '../content/activity'
 import { Reveal } from '../components/motion'
 import { categoryLabels, ProjectCard, StatusBadge, Tags } from '../components/ProjectBits'
 import { projectBySlug, projects, timelineBySlug } from '../content/load'
@@ -38,7 +40,12 @@ export function ProjectDetail() {
               <StatusBadge status={project.status} />
               {project.period && <span className="font-mono text-xs text-muted">{formatPeriod(project.period.start, project.period.end)}</span>}
             </div>
-            <h1 className="mt-4 text-5xl font-semibold tracking-tight sm:text-6xl">{project.title}</h1>
+            <div className="mt-4 flex items-start justify-between gap-6">
+              <h1 className="text-5xl font-semibold tracking-tight sm:text-6xl">{project.title}</h1>
+              <span className="shrink-0 pt-2">
+                <CompletenessMeter project={project} size={64} />
+              </span>
+            </div>
           </Reveal>
           <Reveal delay={160}>
             <p className="mt-5 text-xl leading-relaxed text-muted">{project.summary}</p>
@@ -78,6 +85,12 @@ export function ProjectDetail() {
             <div className="grid place-items-center rounded-3xl border border-dashed border-line p-12 text-center text-sm text-muted">Screenshots and a live demo are on the way.</div>
           )}
         </Reveal>
+
+        {activityFor(project.slug) && (
+          <Reveal className="mt-10">
+            <ProjectActivityPanel activity={activityFor(project.slug)!} />
+          </Reveal>
+        )}
 
         <div className="mt-12 grid gap-12 md:grid-cols-[1fr_14rem]">
           {project.description ? (

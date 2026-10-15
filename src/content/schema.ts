@@ -32,6 +32,8 @@ export const projectSchema = z.object({
   category: z.enum(['web', 'ai', 'tools', 'systems', 'showcase']),
   status: z.enum(['live', 'in-progress', 'coming-soon', 'archived']),
   featured: z.boolean().default(false),
+  /** How complete the project is, 0–100. Defaults from status when omitted. */
+  progress: z.number().min(0).max(100).optional(),
   order: z.number().default(100),
   stack: z.array(z.string()).default([]),
   period: z.object({ start: yearMonth, end: yearMonth.optional() }).optional(),
@@ -45,6 +47,11 @@ export const projectSchema = z.object({
   github: githubSnapshotSchema.optional(),
 })
 export type Project = z.infer<typeof projectSchema>
+
+export function projectProgress(p: Project): number {
+  if (p.progress !== undefined) return p.progress
+  return { live: 100, 'in-progress': 60, 'coming-soon': 15, archived: 100 }[p.status]
+}
 
 const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a #rrggbb color')
 

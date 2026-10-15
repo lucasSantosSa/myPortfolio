@@ -1,6 +1,8 @@
 import { Link } from 'react-router'
 import type { Project } from '../content/schema'
 import { ExternalIcon, GithubIcon } from './Icons'
+import { activityFor } from '../content/activity'
+import { ActivityStrip, CompletenessMeter } from './Activity'
 import { useSpotlight } from './motion'
 
 const statusStyles: Record<Project['status'], { label: string; dot: string }> = {
@@ -78,12 +80,16 @@ function Cover({ project, large }: { project: Project; large?: boolean }) {
 
 export function ProjectCard({ project, large }: { project: Project; large?: boolean }) {
   const ref = useSpotlight<HTMLElement>()
+  const activity = activityFor(project.slug)
   return (
     <article ref={ref} className="spotlight card group relative flex h-full flex-col overflow-hidden transition-transform duration-500 hover:-translate-y-1">
-      <div className="relative">
+      <div className={`relative ${project.status === 'archived' ? 'grayscale-[0.7] transition-[filter] duration-500 group-hover:grayscale-0' : ''}`}>
         <Cover project={project} large={large} />
         <div className="absolute top-4 left-4">
           <StatusBadge status={project.status} />
+        </div>
+        <div className="absolute top-3 right-3 rounded-full bg-card/85 p-0.5 backdrop-blur [&:has(>span:not([role]))]:rounded-md [&:has(>span:not([role]))]:px-1.5 [&:has(>span:not([role]))]:py-1">
+          <CompletenessMeter project={project} size={large ? 48 : 42} />
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-3 p-6">
@@ -96,6 +102,14 @@ export function ProjectCard({ project, large }: { project: Project; large?: bool
           </Link>
         </h3>
         <p className="text-sm leading-relaxed text-muted">{project.summary}</p>
+        {activity && activity.commits > 0 && (
+          <div className="flex items-center gap-3 text-xs text-muted">
+            <ActivityStrip activity={activity} />
+            <span className="font-mono">
+              {activity.commits} {activity.commits === 1 ? 'commit' : 'commits'}
+            </span>
+          </div>
+        )}
         <div className="mt-auto flex items-end justify-between gap-3 pt-2">
           <Tags items={project.stack} limit={large ? 6 : 4} />
           <div className="relative z-[3] flex shrink-0 gap-1">

@@ -16,5 +16,9 @@
     "Playwright"
   ],
   "relatedTimeline": "iseatz",
-  "media": []
+  "media": [],
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/travel-storefront-monorepo",
+    "visibility": "private"
+  }
 }
