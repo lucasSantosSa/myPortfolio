@@ -1,0 +1,24 @@
+{
+  "slug": "maxima",
+  "kind": "work",
+  "title": "Junior Fullstack Engineer",
+  "org": "MAXIMA Service Corporation",
+  "start": "2020-06",
+  "end": "2022-06",
+  "summary": "My first engineering job: web apps and REST APIs with React, Node and PostgreSQL.",
+  "highlights": [
+    "Built and maintained React apps and Express REST APIs on PostgreSQL, including third-party API integrations.",
+    "Expanded Jest coverage, which reduced regressions.",
+    "Sped up APIs by optimizing Express middleware and queries.",
+    "Contributed reusable React components across projects, in an Agile team with CI/CD."
+  ],
+  "stack": [
+    "React",
+    "Node.js",
+    "Express",
+    "PostgreSQL",
+    "Jest",
+    "REST"
+  ],
+  "growth": "Learned the fundamentals of shipping software in a team."
+}

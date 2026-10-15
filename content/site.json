@@ -1,0 +1,38 @@
+{
+  "name": "Lucas Santos",
+  "role": "Fullstack Engineer",
+  "tagline": "I build web apps people rely on every day: booking flows, business systems and AI tools, with React, TypeScript, Node and PostgreSQL.",
+  "location": "Belo Horizonte, Brazil · working remotely",
+  "about": "I've been shipping production web software for over six years, mostly as a remote engineer for North American companies: travel booking platforms, an agricultural cooperative's business system, a legal AI chat tool and marketing sites.\n\nBefore code I was a graphic designer and an English teacher. Design gave me an eye for detail in UI, and teaching made me good at explaining technical things to non-technical people. I'm a native speaker of both English and Portuguese, and I studied Computer Science at UFOP.\n\nOutside client work I build tools for my own Linux setup and home lab, and you'll find a few of them in my projects.",
+  "highlights": [
+    {
+      "value": "6+ years",
+      "label": "shipping production web apps"
+    },
+    {
+      "value": "6 companies",
+      "label": "across travel, legal, agriculture and media"
+    },
+    {
+      "value": "Senior",
+      "label": "frontend engineer on a multi-tenant travel platform"
+    },
+    {
+      "value": "EN · PT",
+      "label": "native in both"
+    }
+  ],
+  "contact": {
+    "email": "lucas.s.sa@hotmail.com",
+    "whatsapp": "5531975564250"
+  },
+  "socials": {
+    "github": "https://github.com/lucasSantosSa",
+    "linkedin": "https://www.linkedin.com/in/lucas-santos-1761828a/"
+  },
+  "cv": "/cv/Lucas_Santos_CV_EN.pdf",
+  "cms": {
+    "repo": "lucasSantosSa/myPortfolio",
+    "branch": "main"
+  }
+}

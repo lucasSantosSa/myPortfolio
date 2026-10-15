@@ -1,0 +1,19 @@
+{
+  "slug": "technoir",
+  "title": "Technoir website",
+  "summary": "A studio website with a separate frontend and backend and an animated login screen.",
+  "description": "An early full stack site: a Sass-styled frontend with an animated login screen, and its own backend.",
+  "category": "web",
+  "status": "archived",
+  "order": 24,
+  "stack": [
+    "JavaScript",
+    "Sass",
+    "Node.js"
+  ],
+  "period": {
+    "start": "2022-06",
+    "end": "2022-07"
+  },
+  "media": []
+}

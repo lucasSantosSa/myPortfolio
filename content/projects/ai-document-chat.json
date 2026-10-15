@@ -1,0 +1,19 @@
+{
+  "slug": "ai-document-chat",
+  "title": "AI Document Chat",
+  "summary": "Upload documents and chat with them. Answers stream in and cite the passages they came from.",
+  "description": "Built from scratch to show the kind of product I led the frontend for at a law firm, using public sample documents.\n\n- Workspaces of documents that are parsed, chunked and indexed.\n- Streaming answers with clickable citations and conversation history.\n- Sign-in, accessible keyboard-first chat UI, and a demo mode that works without an API key.",
+  "category": "showcase",
+  "status": "coming-soon",
+  "featured": true,
+  "order": 4,
+  "stack": [
+    "React",
+    "Styled Components",
+    "Flask",
+    "Python",
+    "Claude API"
+  ],
+  "relatedTimeline": "dla-piper",
+  "media": []
+}

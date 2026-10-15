@@ -1,0 +1,25 @@
+{
+  "slug": "geomap",
+  "title": "GeoMap",
+  "summary": "A map app with Google Maps, Leaflet and Firebase sign-in, first in React and then rebuilt in Next.js.",
+  "description": "GeoMap shows locations on interactive maps (Google Maps and Leaflet) with Firebase authentication. I first built it with Create React App, then moved it to Next.js.",
+  "category": "web",
+  "status": "archived",
+  "order": 21,
+  "stack": [
+    "React",
+    "Next.js",
+    "Google Maps",
+    "Leaflet",
+    "Firebase"
+  ],
+  "period": {
+    "start": "2022-08",
+    "end": "2022-10"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/GeoMap",
+    "visibility": "public"
+  },
+  "media": []
+}

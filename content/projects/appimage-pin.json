@@ -1,0 +1,22 @@
+{
+  "slug": "appimage-pin",
+  "title": "appimage-pin",
+  "summary": "A CLI that installs AppImages as proper Linux desktop apps, with icon, launcher entry and metadata.",
+  "description": "Point it at an AppImage and it:\n\n- installs it to `/opt/<name>/` and links it into `/usr/local/bin/`\n- extracts the icon from inside the AppImage\n- writes a `.desktop` file so it shows up in app launchers\n- generates AppStream metadata\n\nIt comes with install and uninstall scripts.",
+  "category": "tools",
+  "status": "live",
+  "order": 6,
+  "stack": [
+    "Bash",
+    "Linux desktop",
+    "AppStream"
+  ],
+  "period": {
+    "start": "2026-04"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/appimage-pin",
+    "visibility": "public"
+  },
+  "media": []
+}

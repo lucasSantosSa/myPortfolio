@@ -1,0 +1,35 @@
+{
+  "slug": "iseatz",
+  "kind": "work",
+  "title": "Senior Frontend Engineer",
+  "org": "iSeatz",
+  "contract": true,
+  "start": "2025-10",
+  "end": "2026-10",
+  "summary": "Frontend work on a white-label travel booking platform used by loyalty programs: hotels, cars, flights, activities, dining, a shopping cart and trip management, served to several brands in several languages.",
+  "highlights": [
+    "Led investigation of user-facing bugs across a large multi-tenant Nx monorepo (dozens of shared libraries, one storefront serving many brands).",
+    "Owned localization checks across six locales, fixing locale-specific UI rendering and HTML string formatting.",
+    "Shipped accessibility work (WCAG 2.x): replaced an expired-session banner with an accessible alert dialog across air, hotel and car, and fixed screen-reader announcements in the date picker.",
+    "Built an accessible image gallery lightbox and rebuilt the cart's handling of price changes and unavailable items after offers are re-verified.",
+    "Validated releases with Jest, Playwright and Storybook, and diagnosed environment and site-specific rendering issues on Vercel deployments."
+  ],
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "MUI",
+    "Nx",
+    "Yarn",
+    "i18next",
+    "Storybook",
+    "Playwright",
+    "Jest",
+    "Vercel",
+    "Feature flags"
+  ],
+  "growth": "My first senior title: moved from building features to owning quality, accessibility and localization across a codebase many teams share.",
+  "relatedProjects": [
+    "travel-storefront-monorepo"
+  ]
+}

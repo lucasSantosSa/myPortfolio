@@ -1,0 +1,22 @@
+{
+  "slug": "django-crm",
+  "title": "Django CRM",
+  "summary": "A leads and agents CRM built on a Django course base, with my own styling, categories and deployment setup.",
+  "description": "Started from a Django course project. I added lead categories and category pages, restyled the lead and agent screens, and prepared the settings and environment for deployment.",
+  "category": "web",
+  "status": "archived",
+  "order": 23,
+  "stack": [
+    "Django",
+    "Python"
+  ],
+  "period": {
+    "start": "2022-12",
+    "end": "2023-01"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/getting-started-with-django",
+    "visibility": "public"
+  },
+  "media": []
+}

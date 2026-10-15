@@ -1,0 +1,24 @@
+{
+  "slug": "red-ventures",
+  "kind": "work",
+  "title": "Fullstack TypeScript & React Engineer",
+  "org": "Red Ventures",
+  "contract": true,
+  "start": "2023-05",
+  "end": "2023-08",
+  "summary": "Frontend-heavy work (about 80/20) on content sites where SEO drives revenue.",
+  "highlights": [
+    "Built GraphQL-backed features in Next.js tuned for SEO and monetization.",
+    "Integrated WordPress-backed CMS content with pixel-perfect CSS.",
+    "Shipped in a fast release cadence with TypeScript throughout."
+  ],
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "GraphQL",
+    "WordPress",
+    "CSS"
+  ],
+  "growth": "First large production codebase as a remote contractor for a US company."
+}

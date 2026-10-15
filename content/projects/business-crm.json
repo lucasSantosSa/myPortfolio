@@ -1,0 +1,20 @@
+{
+  "slug": "business-crm",
+  "title": "Business CRM",
+  "summary": "A multi-module business system where customers, contracts, orders, invoices and settlements all run on one shared framework.",
+  "description": "Built from scratch to show the kind of system I worked on for an agricultural cooperative, with a generic domain and fake data.\n\n- One shared list, detail and edit framework drives every module.\n- A settlement module computes amounts from deliveries, prices, deductions and advances, with thorough tests.\n- PDF invoices and settlements, roles and an audit log.",
+  "category": "showcase",
+  "status": "coming-soon",
+  "featured": true,
+  "order": 3,
+  "stack": [
+    "React",
+    "TypeScript",
+    "MUI",
+    "NestJS",
+    "Prisma",
+    "PostgreSQL"
+  ],
+  "relatedTimeline": "hensall",
+  "media": []
+}

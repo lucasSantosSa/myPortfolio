@@ -1,0 +1,23 @@
+{
+  "slug": "blog180",
+  "title": "Blog 180",
+  "summary": "A Django blog where signed-in users write, edit and delete their own posts.",
+  "description": "Visitors can read every post; signed-in users can create posts and edit or delete only their own. Includes sign-up, login and logout.",
+  "category": "web",
+  "status": "archived",
+  "order": 22,
+  "stack": [
+    "Django",
+    "Python",
+    "SQLite"
+  ],
+  "period": {
+    "start": "2023-04",
+    "end": "2023-04"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/blog180",
+    "visibility": "public"
+  },
+  "media": []
+}

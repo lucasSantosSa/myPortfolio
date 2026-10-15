@@ -1,0 +1,36 @@
+{
+  "slug": "hensall",
+  "kind": "work",
+  "title": "Full Stack Engineer",
+  "org": "Hensall Co-op",
+  "contract": true,
+  "start": "2024-05",
+  "end": "2025-10",
+  "summary": "Full stack work on the business system of a large agricultural cooperative, covering agronomy, grain contracts and settlements, feed, energy and food.",
+  "highlights": [
+    "Built and maintained modules for sales orders, invoices, pricing, delivery schedules, advances and settlements, front end to database.",
+    "Wrote the money-critical logic: settlement amounts, deferred settlement reversals, month-end prices and delivered-but-unsettled values.",
+    "Developed pricing automation endpoints and optimized heavy queries with advanced filters.",
+    "Kept data in sync between the new system and the cooperative's existing services.",
+    "Helped start the next-generation API: database migrations and seeds, Swagger docs, auth integration tests and CI with GitHub Actions."
+  ],
+  "stack": [
+    "React",
+    "TypeScript",
+    "MUI",
+    "React Hook Form",
+    "SWR",
+    "Node.js",
+    "NestJS",
+    "Prisma",
+    "TypeORM",
+    "PostgreSQL",
+    "Jest",
+    "Docker",
+    "AWS"
+  ],
+  "growth": "Went from feature work to owning financial calculations and test and CI infrastructure in a system the business runs on.",
+  "relatedProjects": [
+    "business-crm"
+  ]
+}

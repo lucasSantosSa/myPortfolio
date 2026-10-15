@@ -1,0 +1,23 @@
+{
+  "slug": "fresh-tracks",
+  "kind": "work",
+  "title": "React Engineer",
+  "org": "Fresh Tracks Canada",
+  "contract": true,
+  "start": "2023-08",
+  "end": "2023-11",
+  "summary": "Built an internal tool the travel team used to manage trips, tourist points of interest, bookings and clients.",
+  "highlights": [
+    "Built the internal trip, booking and client management screens in React with Styled Components as the component foundation.",
+    "Added features that made customer itineraries more personalized.",
+    "Improved Docker-based deployment pipelines on AWS."
+  ],
+  "stack": [
+    "React",
+    "Next.js",
+    "Styled Components",
+    "AWS",
+    "Docker"
+  ],
+  "growth": "Learned to design for internal users: fast, dense screens for people who use the tool all day."
+}

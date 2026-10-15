@@ -1,0 +1,31 @@
+{
+  "slug": "freelance-studies",
+  "kind": "freelance",
+  "title": "Freelance & studies",
+  "org": "Independent",
+  "start": "2022-06",
+  "end": "2023-05",
+  "summary": "Freelance and personal projects while finishing my Computer Science studies.",
+  "highlights": [
+    "Built UFOP Dashboards, a Next.js app presenting university data with per-dashboard pages, plus its Node backend.",
+    "Built the Technoir studio website with a separate frontend and backend.",
+    "Built GeoMap, a map app with Google Maps, Leaflet and Firebase auth, in React and then Next.js.",
+    "Built Django apps: a blog with user-owned posts and a leads CRM."
+  ],
+  "stack": [
+    "React",
+    "Next.js",
+    "Node.js",
+    "Firebase",
+    "Django",
+    "Python",
+    "Vercel"
+  ],
+  "growth": "Shipped projects alone from UI to deploy.",
+  "relatedProjects": [
+    "ufop-dashboards",
+    "geomap",
+    "blog180",
+    "django-crm"
+  ]
+}

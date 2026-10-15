@@ -1,0 +1,15 @@
+{
+  "slug": "ufop",
+  "kind": "education",
+  "title": "Computer Science",
+  "org": "Universidade Federal de Ouro Preto (UFOP)",
+  "start": "2016-01",
+  "end": "2022-12",
+  "summary": "Studied Computer Science, including software engineering, algorithms and data structures, and C/C++.",
+  "highlights": [],
+  "stack": [
+    "C/C++",
+    "Algorithms",
+    "Software Engineering"
+  ]
+}

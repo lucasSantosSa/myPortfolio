@@ -1,0 +1,31 @@
+{
+  "slug": "dla-piper",
+  "kind": "work",
+  "title": "Fullstack Developer & Frontend Lead",
+  "org": "DLA Piper",
+  "contract": true,
+  "start": "2023-11",
+  "end": "2024-05",
+  "summary": "Led the frontend of an AI chat tool for lawyers: legal case documents were loaded into it, and lawyers could prompt and talk to them.",
+  "highlights": [
+    "Led frontend development of the chat experience with React, Context API and Styled Components.",
+    "Integrated Azure AD B2C sign-in and authorization for an enterprise audience.",
+    "Worked with the backend team on the Flask services running on Azure, and on PostgreSQL integration.",
+    "Containerized the app with Docker for consistent deployments."
+  ],
+  "stack": [
+    "React",
+    "Styled Components",
+    "Context API",
+    "Flask",
+    "Python",
+    "Azure",
+    "Azure AD B2C",
+    "PostgreSQL",
+    "Docker"
+  ],
+  "growth": "My first lead role, and my first production product built on large language models.",
+  "relatedProjects": [
+    "ai-document-chat"
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "slug": "steward",
+  "title": "Steward",
+  "summary": "A home-lab assistant that decides what to do and safely carries it out, with a simulator and a training stage for its decision model.",
+  "description": "Steward is split into three parts that live in one Python workspace:\n\n- **Engine**: the action executor. Actions live in a registry and run through a step pipeline, and every run is written to a chain log. It exposes an HTTP API and a `steward` CLI, and runs on my home lab.\n- **Simulator**: a standard-library-only offline simulator, plus the input serializer and the decision schema shared by both sides.\n- **Training**: the stage that trains the decision model from the engine's exports, samples and chain log, without importing the engine itself.\n\nThe boundaries between the parts are versioned formats, so each side can change without breaking the other.",
+  "category": "ai",
+  "status": "in-progress",
+  "featured": true,
+  "order": 1,
+  "stack": [
+    "Python",
+    "uv workspace",
+    "HTTP API",
+    "CLI",
+    "pytest",
+    "mypy",
+    "ruff"
+  ],
+  "period": {
+    "start": "2026-09"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/steward",
+    "visibility": "private"
+  },
+  "media": []
+}

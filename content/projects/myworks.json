@@ -1,0 +1,20 @@
+{
+  "slug": "myworks",
+  "title": "myWorks",
+  "summary": "A full-screen terminal hub for every project on my machine and on GitHub, built in Rust.",
+  "description": "myWorks merges the projects registered on this machine with the repos that only live on GitHub into one keyboard-driven terminal app.\n\n- A sidebar groups projects, a list shows where each comes from (local or GitHub), its branch, uncommitted changes and ahead/behind status, and a details pane shows recent commits and actions.\n- `/` filters by name, path, group, tag or language, `R` syncs from GitHub, and `Enter` opens an action menu.\n- It compiles to one small binary that starts instantly, and the layout adapts to narrow terminals.",
+  "category": "tools",
+  "status": "in-progress",
+  "featured": true,
+  "order": 2,
+  "stack": [
+    "Rust",
+    "ratatui",
+    "GitHub API",
+    "Bash"
+  ],
+  "period": {
+    "start": "2026-10"
+  },
+  "media": []
+}

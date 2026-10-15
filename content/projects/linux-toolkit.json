@@ -1,0 +1,19 @@
+{
+  "slug": "linux-toolkit",
+  "title": "Linux automation toolkit",
+  "summary": "Small tools that make my Linux desktop and devices behave: audio output switching, wireless phone debugging, an alias menu and more.",
+  "description": "A collection of scripts I use every day:\n\n- **audio_toggle**: cycles the default PipeWire output device using `pw-dump`, `jq` and `wpctl`.\n- **phone**: reconnects to my Android phone over wireless ADB and pins a fixed port for the session.\n- **alias_menu**: an ASCII-art terminal menu for browsing and editing shell aliases.\n- **clean_xdg** and **analyze_configs**: move toolchains to XDG base directories and audit an old home folder before a migration.\n- **hammers**: a dispatcher plus a retry loop that keeps requesting scarce cloud capacity and notifies my phone through ntfy when it succeeds.\n- **wallpaper-downloader** and **plugin-downloader**: small Node scrapers with retry logic.",
+  "category": "tools",
+  "status": "live",
+  "order": 5,
+  "stack": [
+    "Bash",
+    "PipeWire",
+    "ADB",
+    "jq",
+    "Node.js",
+    "cheerio",
+    "ntfy"
+  ],
+  "media": []
+}

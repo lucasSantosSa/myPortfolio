@@ -1,0 +1,20 @@
+{
+  "slug": "travel-storefront-monorepo",
+  "title": "Multi-brand Travel Storefront",
+  "summary": "An Nx monorepo for a fictional travel storefront with two brand themes, three languages and shared libraries.",
+  "description": "Built from scratch to show how I worked in a large multi-tenant frontend monorepo.\n\n- A Next.js storefront and Storybook sharing UI, theming, i18n and feature-flag libraries.\n- An accessible image lightbox, an expired-session alert dialog and a cart that handles price changes.\n- Playwright and Storybook tests in CI.",
+  "category": "showcase",
+  "status": "coming-soon",
+  "order": 8,
+  "stack": [
+    "Nx",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "i18next",
+    "Storybook",
+    "Playwright"
+  ],
+  "relatedTimeline": "iseatz",
+  "media": []
+}

@@ -1,0 +1,21 @@
+{
+  "slug": "obsidian-autosync",
+  "title": "obsidian-autosync",
+  "summary": "Keeps an Obsidian vault synced through Git automatically.",
+  "description": "A shell script that commits and syncs an Obsidian vault to a Git remote, so notes stay backed up and in sync across machines without a paid sync service.",
+  "category": "tools",
+  "status": "live",
+  "order": 7,
+  "stack": [
+    "Bash",
+    "Git"
+  ],
+  "period": {
+    "start": "2026-04"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/obsidian-autosync",
+    "visibility": "public"
+  },
+  "media": []
+}

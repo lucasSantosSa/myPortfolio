@@ -1,0 +1,32 @@
+{
+  "slug": "ufop-dashboards",
+  "title": "UFOP Dashboards",
+  "summary": "Dashboards presenting university data, with a page per dashboard and a Node backend.",
+  "description": "A Next.js app with dynamic per-dashboard pages, a responsive layout and scroll-triggered navbar animations, backed by a small Node API deployed on Vercel.",
+  "category": "web",
+  "status": "archived",
+  "order": 20,
+  "stack": [
+    "Next.js",
+    "React",
+    "Node.js",
+    "Vercel"
+  ],
+  "period": {
+    "start": "2022-07",
+    "end": "2022-10"
+  },
+  "repo": {
+    "url": "https://github.com/lucasSantosSa/ufop-backend",
+    "visibility": "public"
+  },
+  "demoUrl": "https://ufop.vercel.app",
+  "media": [
+    {
+      "type": "image",
+      "src": "/media/ufop-dashboards/dashboard.webp",
+      "alt": "UFOP Dashboards home screen",
+      "caption": "Dashboard home"
+    }
+  ]
+}
