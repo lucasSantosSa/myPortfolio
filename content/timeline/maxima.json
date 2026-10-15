@@ -3,14 +3,14 @@
   "kind": "work",
   "title": "Back-office Manager → Junior Fullstack Engineer",
   "org": "MAXIMA Service Corporation (MaxServCorp)",
-  "start": "2020-06",
+  "start": "2019-05",
   "end": "2022-06",
-  "summary": "Joined a home-services company (gutter cleaning, power washing, gutter guard installation) running the back office for its field technicians, then moved into engineering and officially started my software career.",
+  "summary": "Joined a home-services company (gutter cleaning, power washing, gutter guard installation) in May 2019 to run the back office for its field technicians, then moved into engineering in June 2020, where my software career officially began.",
   "highlights": [
     "Managed the back office for field technicians: scheduling, coordination and support for jobs in the field.",
     "Ran marketing and cold calling to bring in new customers.",
     "Started the company's first website, and helped recruit a senior developer to lead the main site.",
-    "As a junior developer, built and maintained React apps and Express REST APIs on PostgreSQL, including third-party integrations.",
+    "From June 2020, as a junior developer, built and maintained React apps and Express REST APIs on PostgreSQL, including third-party integrations.",
     "Expanded Jest coverage, sped up APIs by optimizing Express middleware and queries, and contributed reusable React components in an Agile team with CI/CD."
   ],
   "stack": [
