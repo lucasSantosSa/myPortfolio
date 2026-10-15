@@ -103,7 +103,7 @@ export function ProjectCard({ project, large }: { project: Project; large?: bool
         </h3>
         <p className="text-sm leading-relaxed text-muted">{project.summary}</p>
         {activity && activity.commits > 0 && (
-          <div className="flex items-center gap-3 text-xs text-muted">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted">
             <ActivityStrip activity={activity} />
             <span className="font-mono">
               {activity.commits} {activity.commits === 1 ? 'commit' : 'commits'}

@@ -94,22 +94,52 @@ export function Legend() {
   )
 }
 
-/** Weekly commit strip for cards: one square per week across the project's life (max ~26). */
+/** One square per commit, oldest first; busier days glow brighter. Undated on purpose: it shows how much work went in, not when. */
+function commitCells(activity: ProjectActivity, cap: number) {
+  const max = Math.max(1, ...Object.values(activity.days))
+  const cells: number[] = []
+  for (const [, count] of Object.entries(activity.days).sort(([a], [b]) => a.localeCompare(b))) {
+    for (let i = 0; i < count; i++) cells.push(level(count, max))
+  }
+  return { cells: cells.slice(-cap), hidden: Math.max(0, cells.length - cap) }
+}
+
+/** Card strip: a row of commit squares. */
 export function ActivityStrip({ activity }: { activity: ProjectActivity }) {
-  const cells = useMemo(() => {
-    if (!activity.first) return []
-    const to = new Date(`${activity.last}T00:00:00Z`)
-    const from = new Date(Math.min(new Date(`${activity.first}T00:00:00Z`).getTime(), to.getTime() - 15 * 7 * DAY))
-    const weeks = weeksBetween(from, to).slice(-26)
-    return weeks.map((w) => w.reduce((sum, d) => sum + (activity.days[iso(d)] ?? 0), 0))
-  }, [activity])
-  const max = Math.max(1, ...cells)
+  const [ref, inView] = useInView<HTMLSpanElement>({ threshold: 0 })
+  const { cells, hidden } = useMemo(() => commitCells(activity, 14), [activity])
   return (
-    <span className="flex items-center gap-[3px]" aria-label={`${activity.commits} commits on ${activity.activeDays} days`} role="img">
-      {cells.map((c, i) => (
-        <span key={i} className="h-2.5 w-2.5 rounded-[3px]" style={levelStyle(level(c, max))} />
+    <span ref={ref} className="flex items-center gap-[3px]" aria-label={`${activity.commits} commits`} role="img">
+      {cells.map((l, i) => (
+        <span
+          key={i}
+          className="h-2.5 w-2.5 rounded-[3px]"
+          style={{ ...levelStyle(Math.max(1, l)), opacity: inView ? 1 : 0, transform: inView ? 'none' : 'scale(0.4)', transition: `all 0.35s ease ${i * 35}ms` }}
+        />
       ))}
+      {hidden > 0 && <span className="ml-1 font-mono text-[10px] text-muted">+{hidden}</span>}
     </span>
+  )
+}
+
+/** Project page: a GitHub-like block where each square is one commit. */
+export function CommitBlock({ activity, cell = 12 }: { activity: ProjectActivity; cell?: number }) {
+  const [ref, inView] = useInView<HTMLDivElement>({ threshold: 0 })
+  const { cells, hidden } = useMemo(() => commitCells(activity, 7 * 30), [activity])
+  const rows = 7
+  return (
+    <div ref={ref}>
+      <div className="grid w-max grid-flow-col gap-[3px]" style={{ gridTemplateRows: `repeat(${rows}, ${cell}px)` }} role="img" aria-label={`${activity.commits} commits, one square each`}>
+        {cells.map((l, i) => (
+          <span
+            key={i}
+            className="rounded-[3px]"
+            style={{ width: cell, height: cell, ...levelStyle(Math.max(1, l)), opacity: inView ? 1 : 0, transform: inView ? 'none' : 'scale(0.3)', transition: `all 0.4s ease ${Math.min(i * 18, 1400)}ms` }}
+          />
+        ))}
+      </div>
+      {hidden > 0 && <p className="mt-2 font-mono text-xs text-muted">+{hidden} more</p>}
+    </div>
   )
 }
 
@@ -198,22 +228,23 @@ export function ContributionCalendar({ calendar }: { calendar: GithubCalendar })
   )
 }
 
-/** Project page: commit grid over the project's life, plus totals. */
+/** Project page: commit block plus totals. */
 export function ProjectActivityPanel({ activity }: { activity: ProjectActivity }) {
-  if (!activity.first || !activity.last) return null
-  const last = new Date(`${activity.last}T00:00:00Z`)
-  const first = new Date(`${activity.first}T00:00:00Z`)
-  const from = new Date(Math.min(first.getTime(), last.getTime() - 20 * 7 * DAY))
+  if (!activity.commits) return null
   return (
     <div className="card p-5 sm:p-6">
       <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="font-mono text-xs tracking-widest text-muted uppercase">Commit activity</h2>
         <p className="text-sm text-muted">
-          <span className="font-semibold text-fg">{activity.commits}</span> commits on <span className="font-semibold text-fg">{activity.activeDays}</span> days
+          <span className="font-semibold text-fg">{activity.commits}</span> {activity.commits === 1 ? 'commit' : 'commits'} ·{' '}
+          <span className="font-semibold text-fg">{activity.activeDays}</span> {activity.activeDays === 1 ? 'working session' : 'working sessions'}
         </p>
       </div>
-      <ActivityGrid days={activity.days} from={from} to={last} label={`${activity.commits} commits between ${activity.first} and ${activity.last}`} />
-      <div className="mt-3 flex justify-end">
+      <div className="overflow-x-auto">
+        <CommitBlock activity={activity} />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+        <span>Each square is one commit; brighter squares came from busier days.</span>
         <Legend />
       </div>
     </div>
