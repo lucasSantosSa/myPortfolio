@@ -17,5 +17,22 @@
     "Networking"
   ],
   "growth": "Teaching made me good at explaining complex things simply; support work taught me to debug methodically under real-world pressure.",
-  "relatedProjects": []
+  "relatedProjects": [],
+  "theme": {
+    "preset": "chalkboard",
+    "primary": "#ffcb02",
+    "secondary": "#76ad40",
+    "logos": [
+      {
+        "src": "/media/logos/cebrac.png",
+        "alt": "CEBRAC",
+        "plate": "dark"
+      },
+      {
+        "src": "/media/logos/instituto-mix.png",
+        "alt": "Instituto Mix",
+        "plate": "dark"
+      }
+    ]
+  }
 }

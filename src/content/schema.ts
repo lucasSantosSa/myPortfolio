@@ -46,6 +46,28 @@ export const projectSchema = z.object({
 })
 export type Project = z.infer<typeof projectSchema>
 
+const hex = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Use a #rrggbb color')
+
+export const chapterPresets = ['notebook', 'print', 'chalkboard', 'academic', 'blueprint', 'terminal', 'editorial', 'outdoors', 'legal', 'harvest', 'travel'] as const
+
+/** Visual theme a chapter applies to the page when selected */
+export const chapterThemeSchema = z.object({
+  preset: z.enum(chapterPresets),
+  primary: hex,
+  secondary: hex,
+  logos: z
+    .array(
+      z.object({
+        src: z.string().min(1),
+        alt: z.string().min(1),
+        /** Background the logo needs to be legible on */
+        plate: z.enum(['light', 'dark']).default('light'),
+      }),
+    )
+    .default([]),
+})
+export type ChapterTheme = z.infer<typeof chapterThemeSchema>
+
 export const timelineSchema = z.object({
   slug,
   kind: z.enum(['work', 'freelance', 'education', 'teaching', 'design', 'activity']),
@@ -64,6 +86,7 @@ export const timelineSchema = z.object({
   stack: z.array(z.string()).default([]),
   growth: z.string().optional(),
   relatedProjects: z.array(slug).default([]),
+  theme: chapterThemeSchema.optional(),
 }).refine((t) => t.start || t.dateLabel, { message: 'Give a start date or a date label', path: ['start'] })
 export type TimelineEntry = z.infer<typeof timelineSchema>
 

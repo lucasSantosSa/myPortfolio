@@ -11,5 +11,17 @@
     "Electronics",
     "Automation"
   ],
-  "relatedProjects": []
+  "relatedProjects": [],
+  "theme": {
+    "preset": "academic",
+    "primary": "#760000",
+    "secondary": "#004d7d",
+    "logos": [
+      {
+        "src": "/media/logos/unipac.png",
+        "alt": "FUPAC · UNIPAC",
+        "plate": "light"
+      }
+    ]
+  }
 }

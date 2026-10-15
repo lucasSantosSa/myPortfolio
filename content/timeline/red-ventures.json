@@ -20,5 +20,17 @@
     "WordPress",
     "CSS"
   ],
-  "growth": "First large production codebase as a remote contractor for a US company."
+  "growth": "First large production codebase as a remote contractor for a US company.",
+  "theme": {
+    "preset": "editorial",
+    "primary": "#e34949",
+    "secondary": "#111111",
+    "logos": [
+      {
+        "src": "/media/logos/red-ventures.svg",
+        "alt": "Red Ventures",
+        "plate": "light"
+      }
+    ]
+  }
 }

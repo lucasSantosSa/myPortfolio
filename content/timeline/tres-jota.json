@@ -17,5 +17,11 @@
     "Photoshop"
   ],
   "growth": "Where my eye for layout and detail in UI comes from.",
-  "relatedProjects": []
+  "relatedProjects": [],
+  "theme": {
+    "preset": "print",
+    "primary": "#e6007e",
+    "secondary": "#00a0e3",
+    "logos": []
+  }
 }

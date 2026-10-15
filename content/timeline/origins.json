@@ -14,5 +14,11 @@
     "C++"
   ],
   "growth": "Where the curiosity that drives the rest of this timeline started.",
-  "relatedProjects": []
+  "relatedProjects": [],
+  "theme": {
+    "preset": "notebook",
+    "primary": "#f59e0b",
+    "secondary": "#ec4899",
+    "logos": []
+  }
 }

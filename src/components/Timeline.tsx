@@ -4,6 +4,7 @@ import { projectBySlug } from '../content/load'
 import { compareChronological, type TimelineEntry } from '../content/schema'
 import { formatDuration, formatPeriod } from '../lib/format'
 import { prefersReducedMotion, useInView } from './motion'
+import { ChapterArt, LogoPlates, PageWash, presetHeading, presetLabel, themeStyle, usePageTheme } from './chapterThemes'
 import { Tags } from './ProjectBits'
 
 const kindLabel: Record<TimelineEntry['kind'], string> = {
@@ -37,9 +38,12 @@ export function EntryDetail({ entry }: { entry: TimelineEntry }) {
   const related = entry.relatedProjects.map(projectBySlug).filter((p) => p !== undefined)
   return (
     <div>
-      <p className="font-mono text-xs tracking-wide text-muted">{entryDates(entry)}</p>
-      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-        <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{entry.title}</h3>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="font-mono text-xs tracking-wide text-muted">{entryDates(entry)}</p>
+        <LogoPlates theme={entry.theme} />
+      </div>
+      <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <h3 className={`text-2xl tracking-tight sm:text-3xl ${presetHeading(entry.theme) || 'font-semibold'}`}>{entry.title}</h3>
         {entry.contract && <span className="chip">Contract</span>}
         <span className="chip border-accent-400/40 text-accent-500 dark:text-accent-300">{kindLabel[entry.kind]}</span>
       </div>
@@ -49,15 +53,15 @@ export function EntryDetail({ entry }: { entry: TimelineEntry }) {
         <ul className="mt-5 grid max-w-4xl gap-x-8 gap-y-2.5 text-sm leading-relaxed text-muted md:grid-cols-2">
           {entry.highlights.map((h) => (
             <li key={h} className="flex gap-3">
-              <span className="mt-2 h-1 w-3 shrink-0 rounded-full bg-accent-400/70" aria-hidden />
+              <span className="mt-2 h-1 w-3 shrink-0 rounded-full" style={{ background: 'rgb(var(--glow-a))' }} aria-hidden />
               {h}
             </li>
           ))}
         </ul>
       )}
       {entry.growth && (
-        <p className="mt-5 max-w-3xl rounded-2xl border border-line bg-bg-soft px-4 py-3 text-sm text-fg/80">
-          <span className="mr-2 font-mono text-xs tracking-widest text-accent-500 uppercase">Growth</span>
+        <p className="mt-5 max-w-3xl rounded-2xl border border-line bg-bg-soft/80 px-4 py-3 text-sm text-fg/80 backdrop-blur-sm">
+          <span className="mr-2 font-mono text-xs tracking-widest uppercase" style={{ color: 'rgb(var(--glow-a))' }}>Growth</span>
           {entry.growth}
         </p>
       )}
@@ -69,7 +73,7 @@ export function EntryDetail({ entry }: { entry: TimelineEntry }) {
             {related.map((p, i) => (
               <span key={p.slug}>
                 {i > 0 && ', '}
-                <Link to={`/projects/${p.slug}`} viewTransition className="font-medium text-accent-500 underline-offset-4 hover:underline">
+                <Link to={`/projects/${p.slug}`} viewTransition className="font-medium underline underline-offset-4" style={{ color: 'rgb(var(--glow-a))' }}>
                   {p.title} →
                 </Link>
               </span>
@@ -185,12 +189,22 @@ export function HorizontalTimeline({
                 <span className="block h-6 font-mono text-xs text-muted">{shortDate(e)}</span>
                 <span className="relative my-3 block h-4">
                   <span
+                    style={e.theme ? { background: `linear-gradient(135deg, ${e.theme.primary}, ${e.theme.secondary})` } : undefined}
                     className={`absolute top-0 left-0 h-4 w-4 rounded-full border-[3px] border-bg bg-gradient-to-br ${kindDot[e.kind]} transition-transform duration-300 group-hover:scale-125 ${isSel ? 'scale-150 shadow-[0_0_0_4px_rgb(var(--glow-a)/0.25)]' : ''} ${!e.end && e.start ? 'animate-pulse-ring' : ''}`}
                     aria-hidden
                   />
                 </span>
                 <span className={`block rounded-2xl border p-4 transition-all duration-300 ${isSel ? 'border-accent-400/70 bg-card shadow-[0_10px_40px_-15px_rgb(var(--glow-a)/0.6)]' : 'border-line bg-card/60 group-hover:-translate-y-1 group-hover:border-accent-400/40'}`}>
-                  <span className="block text-[11px] font-semibold tracking-widest text-accent-500 uppercase dark:text-accent-400">{kindLabel[e.kind]}</span>
+                  <span className="flex items-center justify-between gap-2">
+                    <span className="block text-[11px] font-semibold tracking-widest uppercase" style={{ color: e.theme?.primary }}>
+                      {kindLabel[e.kind]}
+                    </span>
+                    {e.theme?.logos[0] && (
+                      <span className={`inline-flex h-6 items-center rounded-md px-1.5 ${e.theme.logos[0].plate === 'dark' ? 'bg-[#16181d]' : 'bg-white'} ring-1 ring-black/5`}>
+                        <img src={e.theme.logos[0].src} alt="" className="h-4 w-auto max-w-16 object-contain" loading="lazy" />
+                      </span>
+                    )}
+                  </span>
                   <span className="mt-1.5 block leading-snug font-semibold text-fg">{e.title}</span>
                   <span className="mt-1 block text-sm leading-snug text-muted">{e.org}</span>
                 </span>
@@ -236,7 +250,7 @@ export function HorizontalTimeline({
       </div>
 
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-line" aria-hidden>
-        <div className="h-full rounded-full bg-gradient-to-r from-accent-400 to-violet-500 transition-[width] duration-200" style={{ width: `${Math.max(8, edges.progress * 100)}%` }} />
+        <div className="h-full rounded-full transition-[width] duration-200" style={{ width: `${Math.max(8, edges.progress * 100)}%`, background: 'linear-gradient(90deg, rgb(var(--glow-a)), rgb(var(--glow-b)))' }} />
       </div>
     </div>
   )
@@ -263,6 +277,7 @@ export function ExperienceExplorer({ entries, initial }: { entries: TimelineEntr
   const chrono = useMemo(() => [...entries].sort(compareChronological), [entries])
   const entry = entries.find((e) => e.slug === selected)
   const idx = chrono.findIndex((e) => e.slug === selected)
+  usePageTheme(entry?.theme)
   const name = (e: TimelineEntry) => (e.kind === 'work' || e.kind === 'design' ? e.org : e.title)
 
   return (
@@ -296,8 +311,23 @@ export function ExperienceExplorer({ entries, initial }: { entries: TimelineEntr
       <HorizontalTimeline entries={entries} selected={selected} onSelect={setSelected} dimmed={tech ? (e) => !e.stack.includes(tech) : undefined} />
 
       {entry && (
-        <section id="timeline-detail" role="tabpanel" aria-live="polite" className="card relative mt-10 overflow-hidden p-6 sm:p-10">
-          <div className="absolute -top-24 -right-24 h-64 w-64 animate-aurora rounded-full bg-accent-400/10 blur-3xl" aria-hidden />
+        <section
+          id="timeline-detail"
+          role="tabpanel"
+          aria-live="polite"
+          aria-label={`${entry.title}, ${entry.org}`}
+          style={themeStyle(entry.theme)}
+          className="card relative mt-10 overflow-hidden bg-card p-6 text-fg shadow-[0_30px_80px_-40px_rgb(var(--glow-a)/0.7)] transition-[background-color,color,box-shadow] duration-500 sm:p-10"
+        >
+          <PageWash theme={entry.theme} id={entry.slug} />
+          <div key={`art-${entry.slug}`} className="animate-[detail-in_0.7s_ease-out]">
+            <ChapterArt theme={entry.theme} />
+          </div>
+          {entry.theme && (
+            <span className="absolute top-4 right-4 z-[1] rounded-full border border-line bg-card/80 px-2.5 py-0.5 font-mono text-[10px] tracking-widest text-muted uppercase backdrop-blur sm:hidden">
+              {presetLabel(entry.theme)}
+            </span>
+          )}
           <div key={entry.slug} className="relative animate-[detail-in_0.5s_cubic-bezier(0.2,0.7,0.2,1)]">
             <EntryDetail entry={entry} />
           </div>

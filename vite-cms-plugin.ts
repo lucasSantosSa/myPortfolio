@@ -32,9 +32,9 @@ export function cmsDevPlugin(): Plugin {
     // Vite stops watching those folders; a plain fs watcher tells the page instead, and only
     // public pages reload themselves.
     config(userConfig) {
-      // Only the top-level content folders; src/content (the schema and loader) stays watched
+      // Only the top-level content folder; src/content (schema, loader) and public/ (Vite's file list) stay watched
       const base = path.resolve(userConfig.root ?? process.cwd())
-      return { server: { watch: { ignored: [path.join(base, 'content') + '/**', path.join(base, 'public/media') + '/**'] } } }
+      return { server: { watch: { ignored: [path.join(base, 'content') + '/**'] } } }
     },
     configureServer(server) {
       if (process.env.VITEST) return

@@ -22,5 +22,17 @@
   ],
   "relatedProjects": [
     "ufop-dashboards"
-  ]
+  ],
+  "theme": {
+    "preset": "academic",
+    "primary": "#ad2a43",
+    "secondary": "#707a81",
+    "logos": [
+      {
+        "src": "/media/logos/ufop.png",
+        "alt": "Universidade Federal de Ouro Preto",
+        "plate": "dark"
+      }
+    ]
+  }
 }

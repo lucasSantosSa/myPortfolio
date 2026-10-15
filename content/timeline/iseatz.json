@@ -31,5 +31,17 @@
   "growth": "My first senior title: moved from building features to owning quality, accessibility and localization across a codebase many teams share.",
   "relatedProjects": [
     "travel-storefront-monorepo"
-  ]
+  ],
+  "theme": {
+    "preset": "travel",
+    "primary": "#dc3a3a",
+    "secondary": "#f7a325",
+    "logos": [
+      {
+        "src": "/media/logos/iseatz.png",
+        "alt": "iSeatz",
+        "plate": "dark"
+      }
+    ]
+  }
 }

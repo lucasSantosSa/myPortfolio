@@ -27,5 +27,17 @@
   "growth": "My first lead role, and my first production product built on large language models.",
   "relatedProjects": [
     "ai-document-chat"
-  ]
+  ],
+  "theme": {
+    "preset": "legal",
+    "primary": "#0073d0",
+    "secondary": "#7c8ea3",
+    "logos": [
+      {
+        "src": "/media/logos/dla-piper.svg",
+        "alt": "DLA Piper",
+        "plate": "light"
+      }
+    ]
+  }
 }

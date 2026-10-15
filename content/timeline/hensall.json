@@ -32,5 +32,17 @@
   "growth": "Went from feature work to owning financial calculations and test and CI infrastructure in a system the business runs on.",
   "relatedProjects": [
     "business-crm"
-  ]
+  ],
+  "theme": {
+    "preset": "harvest",
+    "primary": "#db2532",
+    "secondary": "#f99d2a",
+    "logos": [
+      {
+        "src": "/media/logos/hensall.png",
+        "alt": "Hensall Co-op",
+        "plate": "light"
+      }
+    ]
+  }
 }

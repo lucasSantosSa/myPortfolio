@@ -44,7 +44,7 @@ function ScrollProgress() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
-  return <div className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-gradient-to-r from-accent-400 to-violet-500" style={{ transform: `scaleX(${p})` }} aria-hidden />
+  return <div className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left transition-[background] duration-500" style={{ transform: `scaleX(${p})`, background: 'linear-gradient(90deg, rgb(var(--glow-a)), rgb(var(--glow-b)))' }} aria-hidden />
 }
 
 const links = [

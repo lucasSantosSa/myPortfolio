@@ -22,5 +22,11 @@
     "REST"
   ],
   "growth": "Went from running operations to writing the software behind them, which is where my software engineering career officially began.",
-  "relatedProjects": []
+  "relatedProjects": [],
+  "theme": {
+    "preset": "blueprint",
+    "primary": "#38bdf8",
+    "secondary": "#fb923c",
+    "logos": []
+  }
 }

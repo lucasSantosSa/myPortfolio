@@ -19,5 +19,17 @@
     "AWS",
     "Docker"
   ],
-  "growth": "Learned to design for internal users: fast, dense screens for people who use the tool all day."
+  "growth": "Learned to design for internal users: fast, dense screens for people who use the tool all day.",
+  "theme": {
+    "preset": "outdoors",
+    "primary": "#ea373c",
+    "secondary": "#2e7d5b",
+    "logos": [
+      {
+        "src": "/media/logos/fresh-tracks.svg",
+        "alt": "Fresh Tracks Canada",
+        "plate": "light"
+      }
+    ]
+  }
 }

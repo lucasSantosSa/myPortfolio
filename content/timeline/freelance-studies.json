@@ -27,5 +27,11 @@
     "geomap",
     "blog180",
     "django-crm"
-  ]
+  ],
+  "theme": {
+    "preset": "terminal",
+    "primary": "#22c55e",
+    "secondary": "#14b8a6",
+    "logos": []
+  }
 }
