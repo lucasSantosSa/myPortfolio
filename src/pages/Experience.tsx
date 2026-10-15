@@ -1,18 +1,20 @@
+import { useLocation } from 'react-router'
 import { PageHeader } from '../components/PageHeader'
-import { Timeline } from '../components/Timeline'
+import { ExperienceExplorer } from '../components/Timeline'
 import { timeline } from '../content/load'
 import { usePageTitle } from '../lib/usePageTitle'
 
 export function Experience() {
   usePageTitle('Experience')
+  const { hash } = useLocation()
   return (
     <>
       <PageHeader eyebrow="Experience" title={<>Career <span className="gradient-text">timeline</span></>}>
-        What I worked on, with what, and how my role grew. Client code is confidential, so you won't find it here. Where it helps, a role links to an
-        original project I built from scratch with the same kind of architecture.
+        From my first lines of code at 10 to senior engineer. Client code is confidential, so each chapter describes what I built and how I grew, and links to
+        an original project with the same kind of architecture where there is one.
       </PageHeader>
       <div className="container-page pb-24">
-        <Timeline entries={timeline} filterable />
+        <ExperienceExplorer entries={timeline} initial={hash ? decodeURIComponent(hash.slice(1)) : undefined} />
       </div>
     </>
   )

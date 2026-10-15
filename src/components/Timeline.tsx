@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router'
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { Link, useNavigate } from 'react-router'
 import { projectBySlug } from '../content/load'
 import { compareChronological, type TimelineEntry } from '../content/schema'
 import { formatDuration, formatPeriod } from '../lib/format'
-import { Reveal, useScrollProgress } from './motion'
+import { prefersReducedMotion, useInView } from './motion'
 import { Tags } from './ProjectBits'
 
 const kindLabel: Record<TimelineEntry['kind'], string> = {
@@ -12,7 +12,16 @@ const kindLabel: Record<TimelineEntry['kind'], string> = {
   education: 'Education',
   teaching: 'Teaching',
   design: 'Design',
-  activity: 'Activity',
+  activity: 'Beginnings',
+}
+
+const kindDot: Record<TimelineEntry['kind'], string> = {
+  activity: 'from-amber-400 to-pink-500',
+  design: 'from-pink-400 to-violet-500',
+  teaching: 'from-sky-400 to-indigo-500',
+  education: 'from-violet-400 to-indigo-500',
+  freelance: 'from-emerald-400 to-accent-500',
+  work: 'from-accent-400 to-violet-500',
 }
 
 export function entryDates(e: TimelineEntry): string {
@@ -21,71 +30,227 @@ export function entryDates(e: TimelineEntry): string {
   return e.dateLabel ? `${e.dateLabel} · ${dates}` : dates
 }
 
-function Entry({ entry, compact, index }: { entry: TimelineEntry; compact?: boolean; index: number }) {
+const shortDate = (e: TimelineEntry) => (e.start ? `${e.start.slice(0, 4)}${e.end ? (e.end.slice(0, 4) !== e.start.slice(0, 4) ? `–${e.end.slice(2, 4)}` : '') : '–now'}` : (e.dateLabel ?? ''))
+
+/** Full details for one timeline entry. */
+export function EntryDetail({ entry }: { entry: TimelineEntry }) {
   const related = entry.relatedProjects.map(projectBySlug).filter((p) => p !== undefined)
-  const current = Boolean(entry.start && !entry.end)
   return (
-    <li id={entry.slug} className="relative scroll-mt-28 pb-12 pl-10 last:pb-0 sm:pl-14">
-      <span
-        className={`absolute top-1.5 left-[3px] h-[18px] w-[18px] rounded-full border-[3px] border-bg bg-gradient-to-br from-accent-400 to-violet-500 sm:left-[7px] ${current ? 'animate-pulse-ring' : ''}`}
-        aria-hidden
-      />
-      <Reveal delay={Math.min(index, 3) * 60}>
-        <div className="group rounded-3xl border border-transparent p-0 transition-colors sm:-m-5 sm:p-5 sm:hover:border-line sm:hover:bg-card/60">
-          <p className="font-mono text-xs tracking-wide text-muted">
-            {entryDates(entry)}
+    <div>
+      <p className="font-mono text-xs tracking-wide text-muted">{entryDates(entry)}</p>
+      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+        <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{entry.title}</h3>
+        {entry.contract && <span className="chip">Contract</span>}
+        <span className="chip border-accent-400/40 text-accent-500 dark:text-accent-300">{kindLabel[entry.kind]}</span>
+      </div>
+      <p className="mt-1 font-display text-lg text-muted">{entry.org}</p>
+      <p className="mt-4 max-w-3xl text-lg leading-relaxed text-fg/85">{entry.summary}</p>
+      {entry.highlights.length > 0 && (
+        <ul className="mt-5 grid max-w-4xl gap-x-8 gap-y-2.5 text-sm leading-relaxed text-muted md:grid-cols-2">
+          {entry.highlights.map((h) => (
+            <li key={h} className="flex gap-3">
+              <span className="mt-2 h-1 w-3 shrink-0 rounded-full bg-accent-400/70" aria-hidden />
+              {h}
+            </li>
+          ))}
+        </ul>
+      )}
+      {entry.growth && (
+        <p className="mt-5 max-w-3xl rounded-2xl border border-line bg-bg-soft px-4 py-3 text-sm text-fg/80">
+          <span className="mr-2 font-mono text-xs tracking-widest text-accent-500 uppercase">Growth</span>
+          {entry.growth}
+        </p>
+      )}
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
+        {entry.stack.length > 0 && <Tags items={entry.stack} />}
+        {related.length > 0 && (
+          <p className="text-sm text-muted">
+            {entry.kind === 'work' ? 'Same pattern, built from scratch: ' : 'Projects: '}
+            {related.map((p, i) => (
+              <span key={p.slug}>
+                {i > 0 && ', '}
+                <Link to={`/projects/${p.slug}`} viewTransition className="font-medium text-accent-500 underline-offset-4 hover:underline">
+                  {p.title} →
+                </Link>
+              </span>
+            ))}
           </p>
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h3 className="text-xl font-semibold tracking-tight">{entry.title}</h3>
-            {entry.contract && <span className="chip">Contract</span>}
-            {entry.kind !== 'work' && <span className="chip border-accent-400/40 text-accent-500 dark:text-accent-300">{kindLabel[entry.kind]}</span>}
-          </div>
-          <p className="mt-0.5 font-display text-lg text-muted">{entry.org}</p>
-          <p className="mt-3 max-w-3xl leading-relaxed text-fg/85">{entry.summary}</p>
-          {!compact && entry.highlights.length > 0 && (
-            <ul className="mt-4 max-w-3xl space-y-2 text-sm leading-relaxed text-muted">
-              {entry.highlights.map((h) => (
-                <li key={h} className="flex gap-3">
-                  <span className="mt-2 h-1 w-3 shrink-0 rounded-full bg-accent-400/70" aria-hidden />
-                  {h}
-                </li>
-              ))}
-            </ul>
-          )}
-          {!compact && entry.growth && (
-            <p className="mt-4 max-w-3xl rounded-2xl border border-line bg-bg-soft px-4 py-3 text-sm text-fg/80">
-              <span className="mr-2 font-mono text-xs tracking-widest text-accent-500 uppercase">Growth</span>
-              {entry.growth}
-            </p>
-          )}
-          {entry.stack.length > 0 && (
-            <div className="mt-4">
-              <Tags items={entry.stack} limit={compact ? 5 : undefined} />
-            </div>
-          )}
-          {!compact && related.length > 0 && (
-            <p className="mt-4 text-sm text-muted">
-              {entry.kind === 'work' ? 'Same pattern, built from scratch: ' : 'Projects: '}
-              {related.map((p, i) => (
-                <span key={p.slug}>
-                  {i > 0 && ', '}
-                  <Link to={`/projects/${p.slug}`} viewTransition className="font-medium text-accent-500 underline-offset-4 hover:underline">
-                    {p.title} →
-                  </Link>
-                </span>
-              ))}
-            </p>
-          )}
-        </div>
-      </Reveal>
-    </li>
+        )}
+      </div>
+    </div>
   )
 }
 
-export function Timeline({ entries, compact, filterable }: { entries: TimelineEntry[]; compact?: boolean; filterable?: boolean }) {
+/**
+ * A horizontal, swipeable story line. Oldest on the left.
+ * With onSelect it acts as a tab list; otherwise each stop links to /experience#slug.
+ */
+export function HorizontalTimeline({
+  entries,
+  selected,
+  onSelect,
+  dimmed,
+}: {
+  entries: TimelineEntry[]
+  selected?: string
+  onSelect?: (slug: string) => void
+  dimmed?: (e: TimelineEntry) => boolean
+}) {
+  const path = useMemo(() => [...entries].sort(compareChronological), [entries])
+  const scroller = useRef<HTMLDivElement>(null)
+  const [inViewRef, inView] = useInView<HTMLDivElement>({ threshold: 0 })
+  const [edges, setEdges] = useState({ start: true, end: false, progress: 0 })
+  const navigate = useNavigate()
+
+  const updateEdges = useCallback(() => {
+    const el = scroller.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    setEdges({ start: el.scrollLeft < 8, end: el.scrollLeft > max - 8, progress: max > 0 ? el.scrollLeft / max : 1 })
+  }, [])
+
+  // Keep the selected stop centred; without a selection the story starts at the beginning
+  useEffect(() => {
+    const el = scroller.current
+    if (!el) return
+    const target = selected ? el.querySelector<HTMLElement>(`[data-slug="${selected}"]`) : null
+    if (target) el.scrollTo({ left: target.offsetLeft - el.clientWidth / 2 + target.offsetWidth / 2, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })
+    updateEdges()
+  }, [selected, path, updateEdges])
+
+  const scrollBy = (dir: 1 | -1) => scroller.current?.scrollBy({ left: dir * scroller.current.clientWidth * 0.7, behavior: 'smooth' })
+
+  // Drag to scroll with a mouse (touch already scrolls natively)
+  const drag = useRef<{ x: number; left: number; moved: boolean } | null>(null)
+
+  const onKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
+    if (!onSelect) return
+    const next = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? path.length - 1 : -1
+    if (next < 0 || next >= path.length) return
+    e.preventDefault()
+    onSelect(path[next].slug)
+    scroller.current?.querySelector<HTMLElement>(`[data-slug="${path[next].slug}"] button`)?.focus()
+  }
+
+  return (
+    <div ref={inViewRef} className="relative">
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <p className="font-mono text-xs tracking-widest text-muted uppercase">{path.length} chapters · swipe or drag</p>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => scrollBy(-1)} disabled={edges.start} className="grid h-10 w-10 place-items-center rounded-full border border-line transition-all hover:border-accent-400 disabled:opacity-30" aria-label="Scroll timeline back">
+            ←
+          </button>
+          <button type="button" onClick={() => scrollBy(1)} disabled={edges.end} className="grid h-10 w-10 place-items-center rounded-full border border-line transition-all hover:border-accent-400 disabled:opacity-30" aria-label="Scroll timeline forward">
+            →
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={scroller}
+        onScroll={updateEdges}
+        onPointerDown={(e) => {
+          if (e.pointerType !== 'mouse' || !scroller.current) return
+          drag.current = { x: e.clientX, left: scroller.current.scrollLeft, moved: false }
+        }}
+        onPointerMove={(e) => {
+          if (!drag.current || !scroller.current) return
+          const dx = e.clientX - drag.current.x
+          if (Math.abs(dx) > 4) drag.current.moved = true
+          scroller.current.scrollLeft = drag.current.left - dx
+        }}
+        onPointerUp={() => setTimeout(() => (drag.current = null))}
+        onPointerLeave={() => (drag.current = null)}
+        onClickCapture={(e) => {
+          if (drag.current?.moved) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }}
+        className="marquee-mask -mx-4 cursor-grab snap-x snap-mandatory overflow-x-auto px-4 pb-4 select-none [scrollbar-width:none] active:cursor-grabbing sm:-mx-6 sm:px-6 [&::-webkit-scrollbar]:hidden"
+      >
+        <ol role={onSelect ? 'tablist' : undefined} aria-label="Career timeline" className="relative flex w-max gap-3 pt-2">
+          {/* the line through every stop, drawn in when visible */}
+          <span className="absolute top-[3.15rem] right-0 left-0 h-0.5 rounded-full bg-line" aria-hidden />
+          <span
+            className="absolute top-[3.15rem] right-0 left-0 h-0.5 origin-left rounded-full bg-gradient-to-r from-amber-400 via-accent-400 to-violet-500 transition-transform duration-[1800ms] ease-out"
+            style={{ transform: `scaleX(${inView ? 1 : 0})` }}
+            aria-hidden
+          />
+          {path.map((e, i) => {
+            const isSel = selected === e.slug
+            const dim = dimmed?.(e) ?? false
+            const content = (
+              <>
+                <span className="block h-6 font-mono text-xs text-muted">{shortDate(e)}</span>
+                <span className="relative my-3 block h-4">
+                  <span
+                    className={`absolute top-0 left-0 h-4 w-4 rounded-full border-[3px] border-bg bg-gradient-to-br ${kindDot[e.kind]} transition-transform duration-300 group-hover:scale-125 ${isSel ? 'scale-150 shadow-[0_0_0_4px_rgb(var(--glow-a)/0.25)]' : ''} ${!e.end && e.start ? 'animate-pulse-ring' : ''}`}
+                    aria-hidden
+                  />
+                </span>
+                <span className={`block rounded-2xl border p-4 transition-all duration-300 ${isSel ? 'border-accent-400/70 bg-card shadow-[0_10px_40px_-15px_rgb(var(--glow-a)/0.6)]' : 'border-line bg-card/60 group-hover:-translate-y-1 group-hover:border-accent-400/40'}`}>
+                  <span className="block text-[11px] font-semibold tracking-widest text-accent-500 uppercase dark:text-accent-400">{kindLabel[e.kind]}</span>
+                  <span className="mt-1.5 block leading-snug font-semibold text-fg">{e.title}</span>
+                  <span className="mt-1 block text-sm leading-snug text-muted">{e.org}</span>
+                </span>
+              </>
+            )
+            return (
+              <li
+                key={e.slug}
+                data-slug={e.slug}
+                id={onSelect ? e.slug : undefined}
+                className={`w-56 shrink-0 snap-center transition-all duration-700 ${dim ? 'opacity-30' : ''}`}
+                style={{ transitionDelay: inView ? `${Math.min(i, 8) * 70}ms` : '0ms', opacity: inView ? undefined : 0, transform: inView ? undefined : 'translateY(16px)' }}
+              >
+                {onSelect ? (
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={isSel}
+                    aria-controls="timeline-detail"
+                    tabIndex={isSel || (!selected && i === 0) ? 0 : -1}
+                    onClick={() => onSelect(e.slug)}
+                    onKeyDown={(ev) => onKey(ev, i)}
+                    className="group block w-full text-left"
+                  >
+                    {content}
+                  </button>
+                ) : (
+                  <a
+                    href={`/experience#${e.slug}`}
+                    onClick={(ev) => {
+                      ev.preventDefault()
+                      if (!drag.current?.moved) navigate(`/experience#${e.slug}`, { viewTransition: true })
+                    }}
+                    className="group block"
+                  >
+                    {content}
+                  </a>
+                )}
+              </li>
+            )
+          })}
+        </ol>
+      </div>
+
+      <div className="mt-2 h-1 overflow-hidden rounded-full bg-line" aria-hidden>
+        <div className="h-full rounded-full bg-gradient-to-r from-accent-400 to-violet-500 transition-[width] duration-200" style={{ width: `${Math.max(8, edges.progress * 100)}%` }} />
+      </div>
+    </div>
+  )
+}
+
+/** Experience page: tech filter, horizontal timeline and the selected chapter's details. */
+export function ExperienceExplorer({ entries, initial }: { entries: TimelineEntry[]; initial?: string }) {
+  const newest = entries[0]?.slug
+  const [selected, setSelected] = useState(initial && entries.some((e) => e.slug === initial) ? initial : newest)
   const [tech, setTech] = useState<string | null>(null)
-  const [oldestFirst, setOldestFirst] = useState(false)
-  const [lineRef, progress] = useScrollProgress<HTMLOListElement>()
+  useEffect(() => {
+    if (initial && entries.some((e) => e.slug === initial)) setSelected(initial)
+  }, [initial, entries])
+
   const allTech = useMemo(() => {
     const counts = new Map<string, number>()
     entries.forEach((e) => e.stack.forEach((s) => counts.set(s, (counts.get(s) ?? 0) + 1)))
@@ -94,66 +259,58 @@ export function Timeline({ entries, compact, filterable }: { entries: TimelineEn
       .sort((a, b) => b[1] - a[1])
       .map(([s]) => s)
   }, [entries])
-  const filtered = tech ? entries.filter((e) => e.stack.includes(tech)) : entries
-  const shown = oldestFirst ? [...filtered].sort(compareChronological) : filtered
+  const matches = tech ? entries.filter((e) => e.stack.includes(tech)) : entries
+  const chrono = useMemo(() => [...entries].sort(compareChronological), [entries])
+  const entry = entries.find((e) => e.slug === selected)
+  const idx = chrono.findIndex((e) => e.slug === selected)
+  const name = (e: TimelineEntry) => (e.kind === 'work' || e.kind === 'design' ? e.org : e.title)
 
   return (
     <div>
-      {filterable && (
-        <div className="mb-12">
-          <p id="tech-filter" className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
-            Filter by technology
-          </p>
-          <div role="group" aria-labelledby="tech-filter" className="flex flex-wrap gap-2">
-            {[null, ...allTech].map((t) => (
-              <button
-                key={t ?? 'all'}
-                type="button"
-                aria-pressed={tech === t}
-                onClick={() => setTech(t)}
-                className={`rounded-full border px-3.5 py-1.5 text-sm transition-all duration-300 ${
-                  tech === t ? 'scale-105 border-transparent bg-fg text-bg' : 'border-line text-muted hover:border-accent-400/60 hover:text-fg'
-                }`}
-              >
-                {t ?? 'All'}
-              </button>
-            ))}
-          </div>
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm text-muted" aria-live="polite">
-              {tech ? `${shown.length} ${shown.length === 1 ? 'entry uses' : 'entries use'} ${tech}` : `${entries.length} entries`}
-            </p>
-            <div role="group" aria-label="Order" className="inline-flex rounded-full border border-line p-0.5 text-sm">
-              {[
-                { v: false, label: 'Newest first' },
-                { v: true, label: 'From the beginning' },
-              ].map((o) => (
-                <button
-                  key={o.label}
-                  type="button"
-                  aria-pressed={oldestFirst === o.v}
-                  onClick={() => setOldestFirst(o.v)}
-                  className={`rounded-full px-3 py-1 transition-colors ${oldestFirst === o.v ? 'bg-fg text-bg' : 'text-muted hover:text-fg'}`}
-                >
-                  {o.label}
-                </button>
-              ))}
-            </div>
-          </div>
+      <div className="mb-10">
+        <p id="tech-filter" className="mb-3 font-mono text-xs tracking-widest text-muted uppercase">
+          Highlight a technology
+        </p>
+        <div role="group" aria-labelledby="tech-filter" className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 [&::-webkit-scrollbar]:hidden">
+          {[null, ...allTech].map((t) => (
+            <button
+              key={t ?? 'all'}
+              type="button"
+              aria-pressed={tech === t}
+              onClick={() => {
+                setTech(t)
+                const first = t ? [...entries].find((e) => e.stack.includes(t)) : undefined
+                if (first) setSelected(first.slug)
+              }}
+              className={`shrink-0 rounded-full border px-3.5 py-1.5 text-sm transition-all duration-300 ${tech === t ? 'scale-105 border-transparent bg-fg text-bg' : 'border-line text-muted hover:border-accent-400/60 hover:text-fg'}`}
+            >
+              {t ?? 'All'}
+            </button>
+          ))}
         </div>
+        <p className="mt-3 text-sm text-muted" aria-live="polite">
+          {tech ? `${matches.length} ${matches.length === 1 ? 'chapter uses' : 'chapters use'} ${tech}` : 'Pick a chapter to read about it.'}
+        </p>
+      </div>
+
+      <HorizontalTimeline entries={entries} selected={selected} onSelect={setSelected} dimmed={tech ? (e) => !e.stack.includes(tech) : undefined} />
+
+      {entry && (
+        <section id="timeline-detail" role="tabpanel" aria-live="polite" className="card relative mt-10 overflow-hidden p-6 sm:p-10">
+          <div className="absolute -top-24 -right-24 h-64 w-64 animate-aurora rounded-full bg-accent-400/10 blur-3xl" aria-hidden />
+          <div key={entry.slug} className="relative animate-[detail-in_0.5s_cubic-bezier(0.2,0.7,0.2,1)]">
+            <EntryDetail entry={entry} />
+          </div>
+          <div className="relative mt-8 flex justify-between gap-3 border-t border-line pt-6">
+            <button type="button" className="btn-ghost" disabled={idx <= 0} onClick={() => setSelected(chrono[idx - 1].slug)}>
+              ← {idx > 0 ? name(chrono[idx - 1]) : 'Start'}
+            </button>
+            <button type="button" className="btn-ghost" disabled={idx >= chrono.length - 1} onClick={() => setSelected(chrono[idx + 1].slug)}>
+              {idx < chrono.length - 1 ? name(chrono[idx + 1]) : 'Today'} →
+            </button>
+          </div>
+        </section>
       )}
-      <ol ref={lineRef} className="relative" key={`${tech ?? 'all'}-${oldestFirst}`}>
-        {/* track + scroll-driven fill */}
-        <span className="absolute top-2 bottom-2 left-[11px] w-0.5 rounded-full bg-line sm:left-[15px]" aria-hidden />
-        <span
-          className="absolute top-2 left-[11px] w-0.5 origin-top rounded-full bg-gradient-to-b from-accent-400 to-violet-500 sm:left-[15px]"
-          style={{ height: 'calc(100% - 1rem)', transform: `scaleY(${progress})` }}
-          aria-hidden
-        />
-        {shown.map((e, i) => (
-          <Entry key={e.slug} entry={e} compact={compact} index={i} />
-        ))}
-      </ol>
     </div>
   )
 }

@@ -3,7 +3,7 @@ import { ContactForm } from '../components/ContactForm'
 import { DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, WhatsappIcon } from '../components/Icons'
 import { CountUp, Marquee, Reveal, RotatingWords } from '../components/motion'
 import { ProjectCard } from '../components/ProjectBits'
-import { Journey } from '../components/Journey'
+import { HorizontalTimeline } from '../components/Timeline'
 import { projects, site, timeline } from '../content/load'
 import { whatsappLink } from '../lib/format'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -163,20 +163,22 @@ export function Home() {
         </div>
       </section>
 
-      {/* Experience */}
+      {/* Journey */}
       <section className="py-24" aria-labelledby="exp-heading">
-        <div className="container-page grid gap-14 lg:grid-cols-[1fr_1.6fr]">
-          <div className="lg:sticky lg:top-28 lg:self-start">
+        <div className="container-page">
+          <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading index="02" eyebrow="Journey" title="From curious kid to senior engineer" id="exp-heading">
-              Games made me curious, HTML and C++ at 10 made me sure. Design, teaching, IT support and university came before code became my job. Pick any step to read the details.
+              Games made me curious, HTML and C++ at 10 made me sure. Design, teaching, IT support and university came before code became my job. Pick any chapter to read the details.
             </SectionHeading>
-            <Reveal delay={120}>
-              <Link to="/experience" viewTransition className="btn-ghost mt-8">
+            <Reveal>
+              <Link to="/experience" viewTransition className="btn-ghost">
                 Full timeline <span aria-hidden>→</span>
               </Link>
             </Reveal>
           </div>
-          <Journey entries={timeline} />
+          <div className="mt-12">
+            <HorizontalTimeline entries={timeline} />
+          </div>
         </div>
       </section>
 
