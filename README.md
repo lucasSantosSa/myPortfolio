@@ -4,14 +4,26 @@ My portfolio site, with a career timeline, projects (screenshots, recordings and
 
 **Stack:** React 19, TypeScript, Vite, Tailwind CSS 4, React Router, zod. The contact form runs as a Vercel serverless function. Tests use Vitest.
 
-## Run it
+## Quick start
 
 ```bash
-npm install
-npm run dev        # http://localhost:5173, CMS at /admin
-npm test
-npm run build
+npm run build   # compile the site (installs dependencies on first run)
+npm start       # run it at http://localhost:4173, contact form included
 ```
+
+That's all you need. `npm start` builds first if there's no build yet.
+
+### Other options
+
+| Command | What it does |
+|---|---|
+| `npm run dev` | Development server with live reload; the CMS at `/admin` can save to local files |
+| `npm test` | Run the tests |
+| `npm run typecheck` | Type-check only |
+| `npm run sync:activity` | Refresh the activity squares from GitHub |
+| `PORT=8080 npm start` | Run on another port |
+
+Contact form keys go in `.env` (see `.env.example`); `npm start` and `npm run dev` both read it.
 
 ## Content
 
