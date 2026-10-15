@@ -23,7 +23,7 @@ describe('content files', () => {
   it.each(timeline)('timeline $file is valid and named after its slug', ({ file, data }) => {
     const t = timelineSchema.parse(data)
     expect(file).toBe(`${t.slug}.json`)
-    if (t.end) expect(t.end >= t.start).toBe(true)
+    if (t.end && t.start) expect(t.end >= t.start).toBe(true)
   })
 
   it('cross references point at existing entries', () => {

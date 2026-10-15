@@ -1,0 +1,18 @@
+{
+  "slug": "origins",
+  "kind": "activity",
+  "title": "First lines of code",
+  "org": "Self-taught",
+  "dateLabel": "Age 10",
+  "summary": "I grew up playing video games and taking things apart to see how they worked. By 10 I was sure I wanted to work with computers, and I started teaching myself HTML and a little C++.",
+  "highlights": [
+    "Built my first web pages in plain HTML.",
+    "Wrote my first C++ programs, mostly to understand how the games I played worked."
+  ],
+  "stack": [
+    "HTML",
+    "C++"
+  ],
+  "growth": "Where the curiosity that drives the rest of this timeline started.",
+  "relatedProjects": []
+}

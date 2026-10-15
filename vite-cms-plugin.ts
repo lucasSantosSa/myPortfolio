@@ -31,8 +31,10 @@ export function cmsDevPlugin(): Plugin {
     // Content edits from the CMS would normally trigger Vite's reload and wipe the editor's state.
     // Vite stops watching those folders; a plain fs watcher tells the page instead, and only
     // public pages reload themselves.
-    config() {
-      return { server: { watch: { ignored: ['**/content/**', '**/public/media/**'] } } }
+    config(userConfig) {
+      // Only the top-level content folders; src/content (the schema and loader) stays watched
+      const base = path.resolve(userConfig.root ?? process.cwd())
+      return { server: { watch: { ignored: [path.join(base, 'content') + '/**', path.join(base, 'public/media') + '/**'] } } }
     },
     configureServer(server) {
       if (process.env.VITEST) return

@@ -3,7 +3,7 @@ import { ContactForm } from '../components/ContactForm'
 import { DownloadIcon, GithubIcon, LinkedinIcon, MailIcon, WhatsappIcon } from '../components/Icons'
 import { CountUp, Marquee, Reveal, RotatingWords } from '../components/motion'
 import { ProjectCard } from '../components/ProjectBits'
-import { Timeline } from '../components/Timeline'
+import { Journey } from '../components/Journey'
 import { projects, site, timeline } from '../content/load'
 import { whatsappLink } from '../lib/format'
 import { usePageTitle } from '../lib/usePageTitle'
@@ -117,7 +117,6 @@ function Hero() {
 export function Home() {
   usePageTitle()
   const featured = projects.filter((p) => p.featured).slice(0, 4)
-  const recentWork = timeline.filter((t) => t.kind === 'work').slice(0, 3)
   const tech = [...new Set([...timeline.flatMap((t) => t.stack), ...projects.flatMap((p) => p.stack)])].slice(0, 22)
 
   return (
@@ -168,8 +167,8 @@ export function Home() {
       <section className="py-24" aria-labelledby="exp-heading">
         <div className="container-page grid gap-14 lg:grid-cols-[1fr_1.6fr]">
           <div className="lg:sticky lg:top-28 lg:self-start">
-            <SectionHeading index="02" eyebrow="Experience" title="Where I've worked" id="exp-heading">
-              Client code stays private, so each role describes what I built and how I grew, with links to original projects that use the same patterns.
+            <SectionHeading index="02" eyebrow="Journey" title="From curious kid to senior engineer" id="exp-heading">
+              Games made me curious, HTML and C++ at 10 made me sure. Design, teaching, IT support and university came before code became my job. Pick any step to read the details.
             </SectionHeading>
             <Reveal delay={120}>
               <Link to="/experience" viewTransition className="btn-ghost mt-8">
@@ -177,7 +176,7 @@ export function Home() {
               </Link>
             </Reveal>
           </div>
-          <Timeline entries={recentWork} compact />
+          <Journey entries={timeline} />
         </div>
       </section>
 

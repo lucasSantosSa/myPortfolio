@@ -52,17 +52,31 @@ export const timelineSchema = z.object({
   title: z.string().min(1),
   org: z.string().min(1),
   contract: z.boolean().default(false),
-  start: yearMonth,
+  /** Omit only for undated chapters (e.g. childhood), which need a dateLabel */
+  start: yearMonth.optional(),
   /** Omit for "present" */
   end: yearMonth.optional(),
+  /** Shown instead of the dates, e.g. "Age 10" */
+  dateLabel: z.string().optional(),
   location: z.string().optional(),
   summary: z.string().min(1),
   highlights: z.array(z.string()).default([]),
   stack: z.array(z.string()).default([]),
   growth: z.string().optional(),
   relatedProjects: z.array(slug).default([]),
-})
+}).refine((t) => t.start || t.dateLabel, { message: 'Give a start date or a date label', path: ['start'] })
 export type TimelineEntry = z.infer<typeof timelineSchema>
+
+/** Story order: undated chapters first, then by start date. */
+export function compareChronological(a: TimelineEntry, b: TimelineEntry): number {
+  return (a.start ?? '0000-00').localeCompare(b.start ?? '0000-00') || (a.end ?? '9999-12').localeCompare(b.end ?? '9999-12')
+}
+
+/** Newest first: current roles, then by end and start date; undated chapters (childhood) last. */
+export function compareTimeline(a: TimelineEntry, b: TimelineEntry): number {
+  const key = (t: TimelineEntry) => (t.start ? (t.end ?? '9999-12') : '0000-00')
+  return key(b).localeCompare(key(a)) || (b.start ?? '').localeCompare(a.start ?? '')
+}
 
 export const siteSchema = z.object({
   name: z.string(),

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import siteJson from '../../content/site.json'
-import { projectSchema, siteSchema, timelineSchema, type Project, type TimelineEntry } from '../content/schema'
+import { compareTimeline, projectSchema, siteSchema, timelineSchema, type Project, type TimelineEntry } from '../content/schema'
 import { Field, Notice, TextArea, TextInput, zodMessage } from './fields'
 import { GithubClient } from './github'
 import { emptyProject, ProjectEditor } from './ProjectEditor'
@@ -154,7 +154,7 @@ function Workspace({ store, github, onDisconnect }: { store: ContentStore; githu
   const reload = useCallback(async () => {
     const [p, t] = await Promise.all([loadAll(store, 'content/projects', (v) => projectSchema.parse(v)), loadAll(store, 'content/timeline', (v) => timelineSchema.parse(v))])
     setProjects(p.items.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title)))
-    setTimeline(t.items.sort((a, b) => (b.end ?? '9999').localeCompare(a.end ?? '9999') || b.start.localeCompare(a.start)))
+    setTimeline(t.items.sort(compareTimeline))
     setErrors([...p.errors, ...t.errors])
     setLoading(false)
   }, [store])
@@ -295,7 +295,7 @@ function Workspace({ store, github, onDisconnect }: { store: ContentStore; githu
                         <span className="font-medium">{t.title}</span> <span className="text-zinc-500">· {t.org}</span>
                       </span>
                       <span className="shrink-0 text-xs text-zinc-500">
-                        {t.kind} · {t.start} – {t.end ?? 'present'}
+                        {t.kind} · {t.dateLabel ?? `${t.start} – ${t.end ?? 'present'}`}
                       </span>
                     </button>
                   </li>

@@ -32,7 +32,7 @@ export function TimelineEditor({
   async function save() {
     let entry: TimelineEntry
     try {
-      entry = timelineSchema.parse({ ...t, slug, end: t.end || undefined, growth: t.growth || undefined, location: t.location || undefined })
+      entry = timelineSchema.parse({ ...t, slug, start: t.start || undefined, end: t.end || undefined, dateLabel: t.dateLabel || undefined, growth: t.growth || undefined, location: t.location || undefined })
     } catch (err) {
       setMsg({ kind: 'error', text: `Fix these before saving:\n${zodMessage(err)}` })
       return
@@ -77,11 +77,14 @@ export function TimelineEditor({
         <Field id="t-slug" label="ID" hint="Used to link projects to this entry.">
           <TextInput id="t-slug" value={t.slug} onChange={(v) => set('slug', slugify(v))} placeholder={slug} />
         </Field>
-        <Field id="t-start" label="Start (YYYY-MM)">
-          <TextInput id="t-start" value={t.start} onChange={(v) => set('start', v)} placeholder="2025-10" />
+        <Field id="t-start" label="Start (YYYY-MM)" hint="Can be empty for undated chapters if a date label is set.">
+          <TextInput id="t-start" value={t.start} onChange={(v) => set('start', v || undefined)} placeholder="2025-10" />
         </Field>
         <Field id="t-end" label="End (YYYY-MM, empty for present)">
           <TextInput id="t-end" value={t.end} onChange={(v) => set('end', v || undefined)} />
+        </Field>
+        <Field id="t-datelabel" label="Date label (optional)" hint='Shown instead of or before the dates, e.g. "Age 10".'>
+          <TextInput id="t-datelabel" value={t.dateLabel} onChange={(v) => set('dateLabel', v || undefined)} />
         </Field>
         <Field id="t-location" label="Location (optional)">
           <TextInput id="t-location" value={t.location} onChange={(v) => set('location', v)} placeholder="Remote" />

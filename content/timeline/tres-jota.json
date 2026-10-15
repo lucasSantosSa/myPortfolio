@@ -1,15 +1,21 @@
 {
   "slug": "tres-jota",
   "kind": "design",
-  "title": "Graphic Designer",
+  "title": "Freelance Graphic Designer",
   "org": "Três Jota Soluções Visuais",
   "start": "2010-10",
   "end": "2012-09",
-  "summary": "Designed graphic content under tight deadlines with CorelDraw and Photoshop.",
-  "highlights": [],
+  "summary": "After teaching myself AutoCAD 2007 and CorelDRAW, I landed a freelance relationship with a graphics store, designing print and visual work under tight deadlines.",
+  "highlights": [
+    "Designed graphic content for the store's clients in CorelDRAW and Photoshop.",
+    "Produced technical drawings in AutoCAD.",
+    "Learned to manage my own time and deliver under pressure as a freelancer."
+  ],
   "stack": [
-    "CorelDraw",
+    "CorelDRAW",
+    "AutoCAD",
     "Photoshop"
   ],
-  "growth": "Where my eye for layout and detail in UI comes from."
+  "growth": "Where my eye for layout and detail in UI comes from.",
+  "relatedProjects": []
 }

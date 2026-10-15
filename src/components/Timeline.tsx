@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { projectBySlug } from '../content/load'
-import type { TimelineEntry } from '../content/schema'
+import { compareChronological, type TimelineEntry } from '../content/schema'
 import { formatDuration, formatPeriod } from '../lib/format'
 import { Reveal, useScrollProgress } from './motion'
 import { Tags } from './ProjectBits'
@@ -15,11 +15,17 @@ const kindLabel: Record<TimelineEntry['kind'], string> = {
   activity: 'Activity',
 }
 
+export function entryDates(e: TimelineEntry): string {
+  if (!e.start) return e.dateLabel ?? ''
+  const dates = `${formatPeriod(e.start, e.end)} · ${formatDuration(e.start, e.end)}`
+  return e.dateLabel ? `${e.dateLabel} · ${dates}` : dates
+}
+
 function Entry({ entry, compact, index }: { entry: TimelineEntry; compact?: boolean; index: number }) {
   const related = entry.relatedProjects.map(projectBySlug).filter((p) => p !== undefined)
-  const current = !entry.end
+  const current = Boolean(entry.start && !entry.end)
   return (
-    <li className="relative pb-12 pl-10 last:pb-0 sm:pl-14">
+    <li id={entry.slug} className="relative scroll-mt-28 pb-12 pl-10 last:pb-0 sm:pl-14">
       <span
         className={`absolute top-1.5 left-[3px] h-[18px] w-[18px] rounded-full border-[3px] border-bg bg-gradient-to-br from-accent-400 to-violet-500 sm:left-[7px] ${current ? 'animate-pulse-ring' : ''}`}
         aria-hidden
@@ -27,7 +33,7 @@ function Entry({ entry, compact, index }: { entry: TimelineEntry; compact?: bool
       <Reveal delay={Math.min(index, 3) * 60}>
         <div className="group rounded-3xl border border-transparent p-0 transition-colors sm:-m-5 sm:p-5 sm:hover:border-line sm:hover:bg-card/60">
           <p className="font-mono text-xs tracking-wide text-muted">
-            {formatPeriod(entry.start, entry.end)} · {formatDuration(entry.start, entry.end)}
+            {entryDates(entry)}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
             <h3 className="text-xl font-semibold tracking-tight">{entry.title}</h3>
@@ -78,6 +84,7 @@ function Entry({ entry, compact, index }: { entry: TimelineEntry; compact?: bool
 
 export function Timeline({ entries, compact, filterable }: { entries: TimelineEntry[]; compact?: boolean; filterable?: boolean }) {
   const [tech, setTech] = useState<string | null>(null)
+  const [oldestFirst, setOldestFirst] = useState(false)
   const [lineRef, progress] = useScrollProgress<HTMLOListElement>()
   const allTech = useMemo(() => {
     const counts = new Map<string, number>()
@@ -87,7 +94,8 @@ export function Timeline({ entries, compact, filterable }: { entries: TimelineEn
       .sort((a, b) => b[1] - a[1])
       .map(([s]) => s)
   }, [entries])
-  const shown = tech ? entries.filter((e) => e.stack.includes(tech)) : entries
+  const filtered = tech ? entries.filter((e) => e.stack.includes(tech)) : entries
+  const shown = oldestFirst ? [...filtered].sort(compareChronological) : filtered
 
   return (
     <div>
@@ -111,12 +119,30 @@ export function Timeline({ entries, compact, filterable }: { entries: TimelineEn
               </button>
             ))}
           </div>
-          <p className="mt-3 text-sm text-muted" aria-live="polite">
-            {tech ? `${shown.length} ${shown.length === 1 ? 'entry uses' : 'entries use'} ${tech}` : `${entries.length} entries`}
-          </p>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-muted" aria-live="polite">
+              {tech ? `${shown.length} ${shown.length === 1 ? 'entry uses' : 'entries use'} ${tech}` : `${entries.length} entries`}
+            </p>
+            <div role="group" aria-label="Order" className="inline-flex rounded-full border border-line p-0.5 text-sm">
+              {[
+                { v: false, label: 'Newest first' },
+                { v: true, label: 'From the beginning' },
+              ].map((o) => (
+                <button
+                  key={o.label}
+                  type="button"
+                  aria-pressed={oldestFirst === o.v}
+                  onClick={() => setOldestFirst(o.v)}
+                  className={`rounded-full px-3 py-1 transition-colors ${oldestFirst === o.v ? 'bg-fg text-bg' : 'text-muted hover:text-fg'}`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
-      <ol ref={lineRef} className="relative" key={tech ?? 'all'}>
+      <ol ref={lineRef} className="relative" key={`${tech ?? 'all'}-${oldestFirst}`}>
         {/* track + scroll-driven fill */}
         <span className="absolute top-2 bottom-2 left-[11px] w-0.5 rounded-full bg-line sm:left-[15px]" aria-hidden />
         <span

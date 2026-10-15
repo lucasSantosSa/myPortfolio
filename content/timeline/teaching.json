@@ -1,15 +1,21 @@
 {
   "slug": "teaching",
   "kind": "teaching",
-  "title": "English Teacher",
-  "org": "CEBRAC & Instituto Mix",
+  "title": "English Teacher & Freelance IT Technician",
+  "org": "CEBRAC, Instituto Mix & independent clients",
   "start": "2013-07",
   "end": "2016-02",
-  "summary": "Taught English from beginner to advanced levels.",
+  "summary": "Taught English from beginner to advanced levels, and in parallel worked as a freelance IT technician for my own clients, focused on troubleshooting and systems support.",
   "highlights": [
-    "Planned lessons and assessments for individuals and groups.",
-    "Used debates, role-play and multimedia to improve retention, and gave regular personalized feedback."
+    "Planned lessons and assessments for individuals and groups, using debates, role-play and multimedia to improve retention.",
+    "Gave regular evaluations and personalized feedback.",
+    "Diagnosed and fixed hardware, software and network problems for freelance clients, and kept their systems running."
   ],
-  "stack": [],
-  "growth": "Taught me to explain complex things simply, which I still use with stakeholders and teammates."
+  "stack": [
+    "Troubleshooting",
+    "Systems support",
+    "Networking"
+  ],
+  "growth": "Teaching made me good at explaining complex things simply; support work taught me to debug methodically under real-world pressure.",
+  "relatedProjects": []
 }

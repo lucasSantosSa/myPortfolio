@@ -1,11 +1,15 @@
 {
   "slug": "unipac",
   "kind": "education",
-  "title": "Computer Engineering (Mechatronics, Robotics & Automation)",
-  "org": "Universidade Presidente Antônio Carlos",
+  "title": "Computer Engineering",
+  "org": "Universidade Presidente Antônio Carlos (UNIPAC)",
   "start": "2015-01",
   "end": "2016-12",
-  "summary": "Studied Computer Engineering with a focus on mechatronics, robotics and automation.",
+  "summary": "A year of Computer Engineering focused on mechatronics, robotics and automation, before moving to Computer Science.",
   "highlights": [],
-  "stack": []
+  "stack": [
+    "Electronics",
+    "Automation"
+  ],
+  "relatedProjects": []
 }
