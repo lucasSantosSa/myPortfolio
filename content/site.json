@@ -37,6 +37,7 @@
     "linkedin": "https://www.linkedin.com/in/lucas-santos-1761828a/"
   },
   "cv": "/cv/Lucas_Santos_CV_EN.pdf",
+  "contactEndpoint": "https://myportfolio-flame-tau-83.vercel.app/api/contact",
   "cms": {
     "repo": "lucasSantosSa/myPortfolio",
     "branch": "main"

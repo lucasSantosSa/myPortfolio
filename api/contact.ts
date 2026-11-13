@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import { handleContact } from '../server/contact'
+import { handleContact } from '../server/contact.js'
 
 // The site itself is served from GitHub Pages, so the browser calls this function cross-origin.
 const DEFAULT_ORIGINS = ['https://lucassantossa.github.io', 'http://localhost:5173', 'http://localhost:4173']
