@@ -39,14 +39,44 @@ export function rateLimited(key: string, now = Date.now()): boolean {
 
 const escapeHtml = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!)
 
-export function whatsappText(m: z.infer<typeof contactSchema>): string {
-  const text = `New portfolio message\nFrom: ${m.name} <${m.email}>${m.phone ? `\nPhone: ${m.phone}` : ''}\n\n${m.message}`
+type Message = z.infer<typeof contactSchema>
+
+/** Every field the visitor filled in, in form order. */
+export function messageFields(m: Message, receivedAt = new Date()): { label: string; value: string }[] {
+  return [
+    { label: 'Name', value: m.name },
+    { label: 'Email', value: m.email },
+    { label: 'Phone / WhatsApp', value: m.phone || '(not given)' },
+    { label: 'Received', value: receivedAt.toISOString().replace('T', ' ').slice(0, 16) + ' UTC' },
+  ]
+}
+
+export function plainTextMessage(m: Message, receivedAt?: Date): string {
+  const fields = messageFields(m, receivedAt).map((f) => `${f.label}: ${f.value}`).join('\n')
+  return `New message from your portfolio\n\n${fields}\n\nMessage:\n${m.message}`
+}
+
+export function whatsappText(m: Message, receivedAt?: Date): string {
+  const text = plainTextMessage(m, receivedAt).replace('New message from your portfolio', '*New portfolio message*')
   // CallMeBot messages are sent as a URL query, so keep them reasonably short
   return text.length > 1500 ? `${text.slice(0, 1480)}… (full text in email)` : text
 }
 
-async function sendEmail(env: ContactEnv, m: z.infer<typeof contactSchema>, fetchFn: typeof fetch): Promise<boolean> {
+function emailHtml(m: Message, receivedAt?: Date): string {
+  const rows = messageFields(m, receivedAt)
+    .map((f) => `<tr><td style="padding:6px 16px 6px 0;color:#666;white-space:nowrap;vertical-align:top">${escapeHtml(f.label)}</td><td style="padding:6px 0"><strong>${escapeHtml(f.value)}</strong></td></tr>`)
+    .join('')
+  return `<div style="font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;font-size:15px;color:#111;max-width:640px">
+<h2 style="margin:0 0 12px">New message from your portfolio</h2>
+<table style="border-collapse:collapse;margin-bottom:16px">${rows}</table>
+<div style="padding:14px 16px;background:#f4f5f7;border-radius:10px;white-space:pre-wrap;line-height:1.5">${escapeHtml(m.message)}</div>
+<p style="color:#666;font-size:13px;margin-top:16px">Reply to this email to answer ${escapeHtml(m.name)} directly.</p>
+</div>`
+}
+
+async function sendEmail(env: ContactEnv, m: Message, fetchFn: typeof fetch): Promise<boolean> {
   if (!env.RESEND_API_KEY || !env.CONTACT_TO_EMAIL) return false
+  const receivedAt = new Date()
   const res = await fetchFn('https://api.resend.com/emails', {
     method: 'POST',
     headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
@@ -54,19 +84,30 @@ async function sendEmail(env: ContactEnv, m: z.infer<typeof contactSchema>, fetc
       from: env.CONTACT_FROM_EMAIL || 'Portfolio <onboarding@resend.dev>',
       to: [env.CONTACT_TO_EMAIL],
       reply_to: m.email,
-      subject: `Portfolio message from ${m.name}`,
-      text: `${m.message}\n\n— ${m.name} <${m.email}>${m.phone ? ` · ${m.phone}` : ''}`,
-      html: `<p>${escapeHtml(m.message).replace(/\n/g, '<br>')}</p><hr><p>${escapeHtml(m.name)} &lt;${escapeHtml(m.email)}&gt;${m.phone ? ` · ${escapeHtml(m.phone)}` : ''}</p>`,
+      subject: `Portfolio: ${m.name} (${m.email})`,
+      text: plainTextMessage(m, receivedAt),
+      html: emailHtml(m, receivedAt),
     }),
   })
+  if (!res.ok) console.error('Resend failed', res.status, (await res.text().catch(() => '')).slice(0, 300))
   return res.ok
 }
 
-async function sendWhatsapp(env: ContactEnv, m: z.infer<typeof contactSchema>, fetchFn: typeof fetch): Promise<boolean> {
+/** CallMeBot wants the phone in international format with a leading +. */
+export function callmebotPhone(raw: string): string {
+  const digits = raw.replace(/[^\d]/g, '')
+  return `+${digits}`
+}
+
+async function sendWhatsapp(env: ContactEnv, m: Message, fetchFn: typeof fetch): Promise<boolean> {
   if (!env.CALLMEBOT_PHONE || !env.CALLMEBOT_APIKEY) return false
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(env.CALLMEBOT_PHONE)}&text=${encodeURIComponent(whatsappText(m))}&apikey=${encodeURIComponent(env.CALLMEBOT_APIKEY)}`
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(callmebotPhone(env.CALLMEBOT_PHONE))}&text=${encodeURIComponent(whatsappText(m))}&apikey=${encodeURIComponent(env.CALLMEBOT_APIKEY.trim())}`
   const res = await fetchFn(url)
-  return res.ok
+  // CallMeBot answers 200 even when it refuses, so read the body
+  const body = (await res.text().catch(() => '')).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
+  const ok = res.ok && /queued|sent|will be sent/i.test(body) && !/error|invalid|not (allowed|active|registered)/i.test(body)
+  if (!ok) console.error('CallMeBot failed', res.status, body.replace(env.CALLMEBOT_APIKEY, '***').slice(0, 300))
+  return ok
 }
 
 export async function handleContact(input: unknown, opts: { env: ContactEnv; ip?: string; fetchFn?: typeof fetch; now?: number }): Promise<ContactResult> {
