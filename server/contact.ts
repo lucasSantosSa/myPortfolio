@@ -21,7 +21,7 @@ export interface ContactEnv {
 
 export interface ContactResult {
   status: number
-  body: { ok: boolean; delivered?: { email: boolean; whatsapp: boolean }; error?: string }
+  body: { ok: boolean; delivered?: { email: boolean; whatsapp: boolean }; whatsappIssue?: string; error?: string }
 }
 
 const MIN_FILL_MS = 2500
@@ -99,15 +99,25 @@ export function callmebotPhone(raw: string): string {
   return `+${digits}`
 }
 
-async function sendWhatsapp(env: ContactEnv, m: Message, fetchFn: typeof fetch): Promise<boolean> {
-  if (!env.CALLMEBOT_PHONE || !env.CALLMEBOT_APIKEY) return false
-  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(callmebotPhone(env.CALLMEBOT_PHONE))}&text=${encodeURIComponent(whatsappText(m))}&apikey=${encodeURIComponent(env.CALLMEBOT_APIKEY.trim())}`
+/** Classifies CallMeBot's reply (it answers HTTP 200 even when it refuses). */
+export function callmebotOutcome(status: number, rawBody: string, secrets: string[] = []): { ok: boolean; reason?: string } {
+  let body = rawBody.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  for (const s of secrets.filter(Boolean)) body = body.split(s).join('***')
+  if (/api ?key is invalid|invalid api ?key|apikey.*(invalid|wrong)/i.test(body)) return { ok: false, reason: 'invalid_apikey' }
+  if (/phone.*(not|invalid)|not (activated|registered|allowed)/i.test(body)) return { ok: false, reason: 'phone_not_activated' }
+  if (status >= 200 && status < 300 && /queued|message sent|will receive|sent to/i.test(body)) return { ok: true }
+  return { ok: false, reason: `unexpected: ${status} ${body.slice(0, 120)}` }
+}
+
+async function sendWhatsapp(env: ContactEnv, m: Message, fetchFn: typeof fetch): Promise<{ ok: boolean; reason?: string }> {
+  if (!env.CALLMEBOT_PHONE || !env.CALLMEBOT_APIKEY) return { ok: false, reason: 'not_configured' }
+  const phone = callmebotPhone(env.CALLMEBOT_PHONE)
+  const key = env.CALLMEBOT_APIKEY.trim()
+  const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(phone)}&text=${encodeURIComponent(whatsappText(m))}&apikey=${encodeURIComponent(key)}`
   const res = await fetchFn(url)
-  // CallMeBot answers 200 even when it refuses, so read the body
-  const body = (await res.text().catch(() => '')).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ')
-  const ok = res.ok && /queued|sent|will be sent/i.test(body) && !/error|invalid|not (allowed|active|registered)/i.test(body)
-  if (!ok) console.error('CallMeBot failed', res.status, body.replace(env.CALLMEBOT_APIKEY, '***').slice(0, 300))
-  return ok
+  const outcome = callmebotOutcome(res.status, await res.text().catch(() => ''), [key, phone, phone.slice(1)])
+  if (!outcome.ok) console.error('CallMeBot failed', outcome.reason)
+  return outcome
 }
 
 export async function handleContact(input: unknown, opts: { env: ContactEnv; ip?: string; fetchFn?: typeof fetch; now?: number }): Promise<ContactResult> {
@@ -124,7 +134,13 @@ export async function handleContact(input: unknown, opts: { env: ContactEnv; ip?
   const configured = Boolean(opts.env.RESEND_API_KEY && opts.env.CONTACT_TO_EMAIL) || Boolean(opts.env.CALLMEBOT_PHONE && opts.env.CALLMEBOT_APIKEY)
   if (!configured) return { status: 503, body: { ok: false, error: 'The contact form is not set up yet.' } }
 
-  const [email, whatsapp] = await Promise.all([sendEmail(opts.env, m, fetchFn).catch(() => false), sendWhatsapp(opts.env, m, fetchFn).catch(() => false)])
-  if (!email && !whatsapp) return { status: 502, body: { ok: false, error: 'The message could not be delivered right now.' } }
-  return { status: 200, body: { ok: true, delivered: { email, whatsapp } } }
+  const [email, wa] = await Promise.all([
+    sendEmail(opts.env, m, fetchFn).catch(() => false),
+    sendWhatsapp(opts.env, m, fetchFn).catch((err: unknown) => ({ ok: false, reason: `request_failed: ${(err as Error).message}` })),
+  ])
+  const whatsapp = wa.ok
+  // Only report why WhatsApp failed when it was configured (no secrets are included)
+  const whatsappIssue = !whatsapp && wa.reason !== 'not_configured' ? wa.reason : undefined
+  if (!email && !whatsapp) return { status: 502, body: { ok: false, error: 'The message could not be delivered right now.', ...(whatsappIssue ? { whatsappIssue } : {}) } }
+  return { status: 200, body: { ok: true, delivered: { email, whatsapp }, ...(whatsappIssue ? { whatsappIssue } : {}) } }
 }

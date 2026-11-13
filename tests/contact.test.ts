@@ -30,7 +30,7 @@ describe('handleContact', () => {
   it('succeeds when only one channel works', async () => {
     const fetchFn = vi.fn(async (url: string | URL | Request) => (String(url).includes('resend') ? new Response('{}', { status: 500 }) : ok(url)))
     const r = await handleContact(valid, { env, ip: ip(), fetchFn, now: 10_000 })
-    expect(r.body.delivered).toEqual({ email: false, whatsapp: true })
+    expect(r.body).toEqual({ ok: true, delivered: { email: false, whatsapp: true } })
   })
 
   it('treats a CallMeBot refusal as a failure even with HTTP 200', async () => {
@@ -39,6 +39,7 @@ describe('handleContact', () => {
     )
     const r = await handleContact(valid, { env, ip: ip(), fetchFn, now: 10_000 })
     expect(r.body.delivered).toEqual({ email: true, whatsapp: false })
+    expect(r.body.whatsappIssue).toBe('invalid_apikey')
   })
 
   it('normalizes the CallMeBot phone', () => {
