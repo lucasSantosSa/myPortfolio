@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import type { Media } from '../content/schema'
-import { toEmbedUrl } from '../lib/format'
+import { asset, toEmbedUrl } from '../lib/format'
 
 function MediaView({ item, large }: { item: Media; large?: boolean }) {
   if (item.type === 'video') {
-    return <video src={item.src} controls preload="metadata" className="w-full rounded-xl bg-black" aria-label={item.alt || item.caption} />
+    return <video src={asset(item.src)} controls preload="metadata" className="w-full rounded-xl bg-black" aria-label={item.alt || item.caption} />
   }
   if (item.type === 'embed') {
     return (
@@ -13,7 +13,7 @@ function MediaView({ item, large }: { item: Media; large?: boolean }) {
       </div>
     )
   }
-  return <img src={item.src} alt={item.alt} loading="lazy" className={`w-full rounded-xl border border-line ${large ? 'max-h-[80vh] object-contain' : 'h-auto'}`} />
+  return <img src={asset(item.src)} alt={item.alt} loading="lazy" className={`w-full rounded-xl border border-line ${large ? 'max-h-[80vh] object-contain' : 'h-auto'}`} />
 }
 
 export function MediaGallery({ media }: { media: Media[] }) {

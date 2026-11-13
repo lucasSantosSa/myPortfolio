@@ -39,3 +39,9 @@ export function toEmbedUrl(url: string): string {
     return url
   }
 }
+
+/** Prefixes site-relative paths ("/media/...") with the deploy base, e.g. /myPortfolio/ on GitHub Pages. */
+export function asset(path: string): string {
+  if (!path.startsWith('/') || path.startsWith('//')) return path
+  return `${import.meta.env.BASE_URL.replace(/\/$/, '')}${path}`
+}

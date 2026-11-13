@@ -12,7 +12,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit -p .",
     "preview": "vite preview",
-    "sync:activity": "node scripts/sync-activity.mjs"
+    "sync:activity": "node scripts/sync-activity.mjs",
+    "deploy:gh-pages": "node scripts/deploy-gh-pages.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

@@ -1,3 +1,4 @@
+import { asset } from '../lib/format'
 import { useState } from 'react'
 import type { Media } from '../content/schema'
 import { Select, TextInput } from './fields'
@@ -56,8 +57,8 @@ export function MediaEditor({
         {media.map((m, i) => (
           <li key={`${m.src}-${i}`} className="flex gap-3 rounded-lg border border-zinc-200 p-3 dark:border-zinc-800">
             <div className="h-20 w-32 shrink-0 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-800">
-              {m.type === 'image' && <img src={m.src} alt="" className="h-full w-full object-cover" />}
-              {m.type === 'video' && <video src={m.src} className="h-full w-full object-cover" muted />}
+              {m.type === 'image' && <img src={asset(m.src)} alt="" className="h-full w-full object-cover" />}
+              {m.type === 'video' && <video src={asset(m.src)} className="h-full w-full object-cover" muted />}
               {m.type === 'embed' && <span className="flex h-full items-center justify-center text-xs text-zinc-500">Embed</span>}
             </div>
             <div className="grid flex-1 gap-2 sm:grid-cols-2">

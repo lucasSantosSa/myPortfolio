@@ -1,4 +1,5 @@
 import { useEffect, type CSSProperties, type ReactNode } from 'react'
+import { asset } from '../lib/format'
 import type { ChapterTheme } from '../content/schema'
 
 type Preset = ChapterTheme['preset']
@@ -140,7 +141,7 @@ export function LogoPlates({ theme, size = 'md' }: { theme?: ChapterTheme; size?
           key={l.src}
           className={`inline-flex items-center rounded-xl ${size === "sm" ? "h-8 px-2" : "h-16 px-3"} ${l.plate === 'dark' ? 'bg-[#16181d]' : 'bg-white'} shadow-sm ring-1 ring-black/5`}
         >
-          <img src={l.src} alt={l.alt} className={`${size === "sm" ? "h-5 max-w-24" : "h-12 max-w-44"} w-auto object-contain`} />
+          <img src={asset(l.src)} alt={l.alt} className={`${size === "sm" ? "h-5 max-w-24" : "h-12 max-w-44"} w-auto object-contain`} />
         </span>
       ))}
     </div>

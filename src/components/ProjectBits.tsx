@@ -1,4 +1,5 @@
 import { Link } from 'react-router'
+import { asset } from '../lib/format'
 import type { Project } from '../content/schema'
 import { ExternalIcon, GithubIcon } from './Icons'
 import { activityFor } from '../content/activity'
@@ -58,7 +59,7 @@ function Cover({ project, large }: { project: Project; large?: boolean }) {
   if (image) {
     return (
       <div className={`overflow-hidden ${height}`}>
-        <img src={image.src} alt={image.alt || `${project.title} screenshot`} loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+        <img src={asset(image.src)} alt={image.alt || `${project.title} screenshot`} loading="lazy" className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105" />
       </div>
     )
   }

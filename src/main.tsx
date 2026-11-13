@@ -23,7 +23,7 @@ const router = createBrowserRouter([
     path: '/admin/*',
     lazy: async () => ({ Component: (await import('./admin/AdminApp')).AdminApp }),
   },
-])
+], { basename: import.meta.env.BASE_URL.replace(/\/$/, '') || '/' })
 
 if (import.meta.hot) {
   import.meta.hot.on('portfolio:content-changed', () => {

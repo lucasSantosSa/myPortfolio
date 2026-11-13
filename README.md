@@ -22,6 +22,7 @@ That's all you need. `npm start` builds first if there's no build yet.
 | `npm run typecheck` | Type-check only |
 | `npm run sync:activity` | Refresh the activity squares from GitHub |
 | `PORT=8080 npm start` | Run on another port |
+| `npm run deploy:gh-pages` | Publish to lucassantossa.github.io/myPortfolio (the contact form falls back to WhatsApp/email links there) |
 
 Contact form keys go in `.env` (see `.env.example`); `npm start` and `npm run dev` both read it.
 

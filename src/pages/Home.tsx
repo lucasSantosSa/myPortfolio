@@ -8,7 +8,7 @@ import { QuestLog } from '../components/Sidequests'
 import { githubCalendar } from '../content/activity'
 import { HorizontalTimeline } from '../components/Timeline'
 import { projects, sidequests, site, timeline } from '../content/load'
-import { whatsappLink } from '../lib/format'
+import { asset, whatsappLink } from '../lib/format'
 import { usePageTitle } from '../lib/usePageTitle'
 
 export function SectionHeading({ index, eyebrow, title, children, id }: { index: string; eyebrow: string; title: React.ReactNode; children?: React.ReactNode; id: string }) {
@@ -59,7 +59,7 @@ function Hero() {
               <Link to="/projects" viewTransition className="btn-primary px-6 py-3">
                 See my work <span aria-hidden>→</span>
               </Link>
-              <a href={site.cv} className="btn-ghost px-6 py-3" download>
+              <a href={asset(site.cv)} className="btn-ghost px-6 py-3" download>
                 <DownloadIcon /> Download CV
               </a>
               <div className="ml-1 flex gap-1">
@@ -79,8 +79,8 @@ function Hero() {
             <div className="absolute -inset-3 rounded-[2.75rem] bg-gradient-to-br from-accent-400 via-violet-500 to-accent-400 opacity-60 blur-2xl" aria-hidden />
             <div className="relative overflow-hidden rounded-[2.5rem] border border-line bg-gradient-to-b from-accent-200/70 to-violet-400/40 dark:from-accent-900/80 dark:to-violet-500/20">
               <img
-                src="/media/profile/me-960.webp"
-                srcSet="/media/profile/me-480.webp 480w, /media/profile/me-960.webp 960w"
+                src={asset('/media/profile/me-960.webp')}
+                srcSet={`${asset('/media/profile/me-480.webp')} 480w, ${asset('/media/profile/me-960.webp')} 960w`}
                 sizes="(min-width: 1024px) 420px, 352px"
                 alt={`Portrait of ${site.name}`}
                 className="w-full"
@@ -214,7 +214,7 @@ export function Home() {
           <Reveal className="mx-auto w-full max-w-sm">
             <div className="group relative">
               <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-[2rem] border-2 border-accent-400/50 transition-transform duration-500 group-hover:translate-x-1.5 group-hover:translate-y-1.5" aria-hidden />
-              <img src="/media/profile/me-about.webp" alt={`${site.name} smiling outdoors`} loading="lazy" className="relative w-full rounded-[2rem] object-cover" />
+              <img src={asset('/media/profile/me-about.webp')} alt={`${site.name} smiling outdoors`} loading="lazy" className="relative w-full rounded-[2rem] object-cover" />
             </div>
           </Reveal>
           <div>

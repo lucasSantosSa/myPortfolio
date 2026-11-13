@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent }
 import { Link, useNavigate } from 'react-router'
 import { projectBySlug, sidequestsFor } from '../content/load'
 import { compareChronological, type TimelineEntry } from '../content/schema'
-import { formatDuration, formatPeriod } from '../lib/format'
+import { asset, formatDuration, formatPeriod } from '../lib/format'
 import { prefersReducedMotion, useInView } from './motion'
 import { LogoPlates, PageArt, PageWash, presetHeading, presetLabel, themeStyle, usePageTheme } from './chapterThemes'
 import { Tags } from './ProjectBits'
@@ -203,7 +203,7 @@ export function HorizontalTimeline({
                     </span>
                     {e.theme?.logos[0] && (
                       <span className={`inline-flex h-6 items-center rounded-md px-1.5 ${e.theme.logos[0].plate === 'dark' ? 'bg-[#16181d]' : 'bg-white'} ring-1 ring-black/5`}>
-                        <img src={e.theme.logos[0].src} alt="" className="h-4 w-auto max-w-16 object-contain" loading="lazy" />
+                        <img src={asset(e.theme.logos[0].src)} alt="" className="h-4 w-auto max-w-16 object-contain" loading="lazy" />
                       </span>
                     )}
                   </span>
@@ -235,7 +235,7 @@ export function HorizontalTimeline({
                   </button>
                 ) : (
                   <a
-                    href={`/experience#${e.slug}`}
+                    href={asset(`/experience#${e.slug}`)}
                     onClick={(ev) => {
                       ev.preventDefault()
                       if (!drag.current?.moved) navigate(`/experience#${e.slug}`, { viewTransition: true })

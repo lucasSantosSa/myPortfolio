@@ -1,6 +1,6 @@
 import { useRef, useState, type FormEvent } from 'react'
 import { site } from '../content/load'
-import { whatsappLink } from '../lib/format'
+import { asset, whatsappLink } from '../lib/format'
 import { MailIcon, WhatsappIcon } from './Icons'
 
 type State =
@@ -19,7 +19,7 @@ export function ContactForm() {
     const data = Object.fromEntries(new FormData(form)) as Record<string, string>
     setState({ kind: 'sending' })
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(asset('/api/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...data, startedAt: startedAt.current }),
