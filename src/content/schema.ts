@@ -124,6 +124,8 @@ export const siteSchema = z.object({
   }),
   socials: z.object({ github: z.string().url(), linkedin: z.string().url() }),
   cv: z.string(),
+  /** Full URL of the contact endpoint when the site is hosted somewhere without one (e.g. GitHub Pages) */
+  contactEndpoint: z.string().url().optional(),
   cms: z.object({ repo: z.string().regex(/^[\w.-]+\/[\w.-]+$/), branch: z.string() }),
 })
 export type Site = z.infer<typeof siteSchema>
